@@ -293,14 +293,35 @@ function generateReportTable(data) {
 // main.js
 // main.js
 // main.js
+// main.js
 document.addEventListener('DOMContentLoaded', () => {
   displayShoppingLists();
   document.getElementById('shopping-list-form').addEventListener('submit', handleFormSubmit);
   document.getElementById('add-item-button').addEventListener('click', addItem);
+  document.getElementById('add-edit-item-button').addEventListener('click', addEditItem);
+  document.getElementById('cancel-edit-button').addEventListener('click', cancelEdit);
 });
+
+let editingListId = null;
 
 function addItem() {
   const container = document.getElementById('items-container');
+  const itemDiv = document.createElement('div');
+  itemDiv.classList.add('item');
+  itemDiv.innerHTML = `
+    <input type="number" class="item-number" placeholder="Item Number" required>
+    <input type="text" class="item-name" placeholder="Item Name" required>
+    <input type="number" class="quantity" placeholder="Quantity" required>
+    <input type="number" class="unit-price" placeholder="Unit Price" required>
+    <input type="number" class="total-cost" placeholder="Total Cost" readonly>
+    <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
+    <button type="button" onclick="removeItem(this)">Remove Item</button>
+  `;
+  container.appendChild(itemDiv);
+}
+
+function addEditItem() {
+  const container = document.getElementById('edit-items-container');
   const itemDiv = document.createElement('div');
   itemDiv.classList.add('item');
   itemDiv.innerHTML = `
@@ -328,8 +349,13 @@ function removeItem(button) {
 
 async function displayShoppingLists() {
   try {
-    const response = await fetch('/api/shoppinglists');
-    if (!response.ok) throw new Error('Failed to fetch shopping lists');
+    const response = await fetch('http://127.0.0.1:5000/api/shoppinglists');
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Response Status:', response.status, response.statusText);
+      console.error('Response Body:', errorText);
+      throw new Error(`Failed to fetch shopping lists: ${errorText}`);
+    }
     const shoppingLists = await response.json();
     const container = document.getElementById('shopping-lists');
     container.innerHTML = '';
@@ -349,12 +375,13 @@ async function displayShoppingLists() {
     });
   } catch (error) {
     console.error('An error occurred while fetching shopping lists:', error.message);
+    alert(`Error: ${error.message}`); // Display the error on the UI
   }
 }
 
 async function handleFormSubmit(event) {
   event.preventDefault();
-  
+
   const name = document.getElementById('list-name').value;
   const items = Array.from(document.querySelectorAll('.item')).map(item => ({
     itemNumber: item.querySelector('.item-number').value,
@@ -366,7 +393,7 @@ async function handleFormSubmit(event) {
   const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
 
   try {
-    const response = await fetch('/api/shoppinglists', {
+    const response = await fetch('http://127.0.0.1:5000/api/shoppinglists', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, items, overallTotal }),
@@ -378,8 +405,9 @@ async function handleFormSubmit(event) {
       console.error('Response Body:', errorText);
       throw new Error(`Failed to save shopping list: ${errorText}`);
     }
-    
+
     const result = await response.json();
+    console.log('Shopping list saved successfully:', result);
     await displayShoppingLists();
     event.target.reset();
   } catch (error) {
@@ -387,6 +415,114 @@ async function handleFormSubmit(event) {
     alert(`Error: ${error.message}`);
   }
 }
+
+async function editShoppingList(listId) {
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Response Status:', response.status, response.statusText);
+      console.error('Response Body:', errorText);
+      throw new Error(`Failed to fetch shopping list: ${errorText}`);
+    }
+    const list = await response.json();
+    editingListId = listId;
+    showEditForm(list);
+  } catch (error) {
+    console.error('An error occurred while fetching the shopping list:', error.message);
+    alert(`Error: ${error.message}`);
+  }
+}
+
+function showEditForm(list) {
+  document.getElementById('edit-shopping-list-form').style.display = 'block';
+  document.getElementById('edit-list-name').value = list.name;
+  const editItemsContainer = document.getElementById('edit-items-container');
+  editItemsContainer.innerHTML = '';
+  list.items.forEach(item => {
+    const itemDiv = document.createElement('div');
+    itemDiv.classList.add('item');
+    itemDiv.innerHTML = `
+      <input type="number" class="item-number" value="${item.itemNumber}" placeholder="Item Number" required>
+      <input type="text" class="item-name" value="${item.itemName}" placeholder="Item Name" required>
+      <input type="number" class="quantity" value="${item.quantity}" placeholder="Quantity" required>
+      <input type="number" class="unit-price" value="${item.unitPrice}" placeholder="Unit Price" required>
+      <input type="number" class="total-cost" value="${item.totalCost}" placeholder="Total Cost" readonly>
+      <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
+      <button type="button" onclick="removeItem(this)">Remove Item</button>
+    `;
+    editItemsContainer.appendChild(itemDiv);
+  });
+}
+
+async function saveEdit(event) {
+  event.preventDefault();
+
+  const name = document.getElementById('edit-list-name').value;
+  const items = Array.from(document.querySelectorAll('#edit-items-container .item')).map(item => ({
+    itemNumber: item.querySelector('.item-number').value,
+    itemName: item.querySelector('.item-name').value,
+    quantity: parseInt(item.querySelector('.quantity').value, 10),
+    unitPrice: parseFloat(item.querySelector('.unit-price').value),
+    totalCost: parseFloat(item.querySelector('.total-cost').value),
+  }));
+  const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
+
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${editingListId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, items, overallTotal }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Response Status:', response.status, response.statusText);
+      console.error('Response Body:', errorText);
+      throw new Error(`Failed to save changes: ${errorText}`);
+    }
+
+    console.log('Shopping list updated successfully');
+    await displayShoppingLists();
+    cancelEdit();
+  } catch (error) {
+    console.error('An error occurred while updating the shopping list:', error.message);
+    alert(`Error: ${error.message}`);
+  }
+}
+
+function cancelEdit() {
+  document.getElementById('edit-shopping-list-form').style.display = 'none';
+  document.getElementById('edit-form').reset();
+  editingListId = null;
+}
+
+document.getElementById('edit-form').addEventListener('submit', saveEdit);
+
+async function deleteShoppingList(listId) {
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Response Status:', response.status, response.statusText);
+      console.error('Response Body:', errorText);
+      throw new Error(`Failed to delete shopping list: ${errorText}`);
+    }
+
+    console.log('Shopping list deleted successfully');
+    await displayShoppingLists();
+  } catch (error) {
+    console.error('An error occurred while deleting the shopping list:', error.message);
+    alert(`Error: ${error.message}`);
+  }
+}
+
+// Make functions globally accessible
+window.editShoppingList = editShoppingList;
+window.deleteShoppingList = deleteShoppingList;
 
 
 // Initial load

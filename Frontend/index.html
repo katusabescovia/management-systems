@@ -40,17 +40,32 @@
       <button type="submit">Add Income</button>
     </form>
   </section>
+  <!-- Edit Shopping List Form (Initially hidden) -->
+<div id="edit-shopping-list-form" style="display: none;">
+  <h2>Edit Shopping List</h2>
+  <form id="edit-form">
+    <label for="edit-list-name">List Name:</label>
+    <input type="text" id="edit-list-name" required>
+    
+    <div id="edit-items-container"></div>
+    
+    <button type="button" id="add-edit-item-button">Add Item</button>
+    <button type="submit">Save Changes</button>
+    <button type="button" id="cancel-edit-button">Cancel</button>
+  </form>
+</div>
+
 
   <!-- Shopping List Form -->
   <!-- index.html -->
-<form id="shopping-list-form">
-  <input type="text" id="list-name" placeholder="List Name" required>
-  <div id="items-container"></div>
-  <button type="button" id="add-item-button">Add Item</button>
-  <button type="submit">Save List</button>
-</form>
-<div id="shopping-lists"></div>
-
+  <form id="shopping-list-form">
+    <input type="text" id="list-name" placeholder="List Name" required>
+    <div id="items-container"></div>
+    <button type="button" id="add-item-button">Add Item</button>
+    <button type="submit">Save List</button>
+  </form>
+  <div id="shopping-lists"></div>
+  
   
 
 

@@ -1,4 +1,3 @@
-// models/shoppingList.js
 const mongoose = require('mongoose');
 
 const shoppingListSchema = new mongoose.Schema({
