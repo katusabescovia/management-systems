@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker Dashboard</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <h1>Expense Tracker Dashboard</h1>
+
+  <!-- Dashboard Summary -->
+  <section id="dashboard">
+    <h2>Financial Summary</h2>
+    <div id="total-expenses">Total Expenses: $0</div>
+    <div id="total-income">Total Income: $0</div>
+    <div id="balance">Balance: $0</div>
+  </section>
+
+  <!-- Expense Form -->
+  <section id="expense-section">
+    <h2>Add Expense</h2>
+    <form id="expense-form">
+      <input type="text" id="category" placeholder="Category" required>
+      <input type="number" id="expense-amount" placeholder="Amount" required>
+      <input type="date" id="expense-date" required>
+      <textarea id="expense-notes" placeholder="Notes"></textarea>
+      <button type="submit">Add Expense</button>
+    </form>
+  </section>
+
+  <!-- Income Form -->
+  <section id="income-section">
+    <h2>Add Income</h2>
+    <form id="income-form">
+      <input type="text" id="income-source" placeholder="Source" required>
+      <input type="number" id="income-amount" placeholder="Amount" required>
+      <input type="date" id="income-date" required>
+      <textarea id="income-notes" placeholder="Notes"></textarea>
+      <button type="submit">Add Income</button>
+    </form>
+  </section>
+
+  <!-- Shopping List Form -->
+  <!-- index.html -->
+<form id="shopping-list-form">
+  <input type="text" id="list-name" placeholder="List Name" required>
+  <div id="items-container"></div>
+  <button type="button" id="add-item-button">Add Item</button>
+  <button type="submit">Save List</button>
+</form>
+<div id="shopping-lists"></div>
+
+  
+
+
+  <!-- Reports Section -->
+<!-- Reports Section -->
+<section id="report-section">
+  <h2>Generate Reports</h2>
+  <input type="date" id="start-date">
+  <input type="date" id="end-date">
+  <input type="text" id="category" placeholder="Category">
+  <button>Daily Report</button>
+  <button>Weekly Report</button>
+  <button>Monthly Report</button>
+  <button>Yearly Report</button>
+  <h3>Report Output</h3>
+  <div id="report-output"></div>
+</section>
+
+
+
+
+  <!-- Tables Section -->
+  <section id="tables-section">
+    <h2>Expense List</h2>
+    <table id="expenses-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h2>Income List</h2>
+    <table id="income-table">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Update Expense Form -->
+  <section id="update-section">
+    <h2>Update Expense</h2>
+    <form id="update-form">
+      <input type="hidden" id="update-id">
+      <input type="text" id="update-category" placeholder="Category" required>
+      <input type="number" id="update-amount" placeholder="Amount" required>
+      <input type="date" id="update-date" required>
+      <textarea id="update-notes" placeholder="Notes"></textarea>
+      <button type="submit">Update Expense</button>
+    </form>
+  </section>
+
+  <!-- Update Income Form -->
+  <section id="update-income-section">
+    <h2>Update Income</h2>
+    <form id="update-income-form">
+      <input type="hidden" id="update-income-id">
+      <input type="text" id="update-income-source" placeholder="Source" required>
+      <input type="number" id="update-income-amount" placeholder="Amount" required>
+      <input type="date" id="update-income-date" required>
+      <textarea id="update-income-notes" placeholder="Notes"></textarea>
+      <button type="submit">Update Income</button>
+    </form>
+  </section>
+
+  <footer></footer>
+  <script src="scripts/main.js"></script>
+</body>
+</html>
