@@ -1,72 +1,667 @@
-/* frontend/styles/style.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-  }
-  
-  h1 {
-    text-align: center;
-  }
-  
-  section {
-    background: white;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  input, textarea, button {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-  }
-  
-  button {
-    background-color: #5c67f2;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #4a55d4;
-  }
-  
-  pre {
-    white-space: pre-wrap; /* Allows pre-formatted text to wrap */
-  }
-  .report-card {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .report-card h4 {
-    margin: 0;
-    font-size: 1.2em;
-  }
-  body {
-    font-family: Arial, sans-serif;
+/* General form container styles */
+.styled-form {
+  background-color: #fff;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px; /* Centers and limits the width */
+  position: relative; /* For beveled effect */
 }
+
+/* Header styles */
+.form-header {
+  background-color: #ff6666; /* Adjusted to match the red from the image */
+  color: #fff;
+  font-size: 1.5em;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px 8px 0 0; /* Rounded top corners */
+  margin: -20px -20px 20px -20px; /* Extends header beyond form */
+}
+
+/* Input and textarea styles */
+.styled-form input, 
+.styled-form textarea {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Beveled effect */
+  box-sizing: border-box;
+}
+
+/* Button styles */
+.form-btn {
+  background-color: #9a74db; /* Purplish color */
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Beveled effect */
+}
+
+.form-btn:hover {
+  background-color: #7c5fb8; /* Darker shade on hover */
+}
+
+/* Checkbox styles */
+.styled-form label {
+  font-size: 0.9em;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.styled-form input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .styled-form {
+    padding: 15px;
+  }
+
+  .styled-form input,
+  .styled-form textarea,
+  .styled-form button {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
+/* Extra styles for a polished look */
+.styled-form input::placeholder, 
+.styled-form textarea::placeholder {
+  color: #aaa;
+}
+
+.styled-form textarea {
+  height: 100px;
+  resize: none; /* Prevents resizing */
+}
+
+.styled-form input[type="submit"] {
+  margin-top: 10px;
+}
+
+/* Adjust shadow and border for inputs to create a beveled look */
+.styled-form input, 
+.styled-form textarea {
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+}
+
+.styled-form input:focus,
+.styled-form textarea:focus {
+  outline: none;
+  border-color: #9a74db;
+  box-shadow: 0 0 5px rgba(154, 116, 219, 0.5);
+}
+.forms{
+  font-family: Arial, sans-serif;
+  /* background-color: #f4f4f4; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Dashboard Section Styles */
+/* Dashboard Section */
+/* Dashboard Section */
+#dashboard {
+  background-color: #fff;
+  padding: 20px;
+  margin: 20px auto; /* Centers the section horizontally */
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 900px; /* Adjusted for better card layout */
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space out the cards */
+  flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+  gap: 20px; /* Space between cards */
+}
+
+/* Dashboard Header */
+#dashboard h2 {
+  width: 100%;
+  background-color: #ff6666; /* Red color for the header */
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px 8px 0 0; /* Rounded top corners */
+  font-size: 1.5em;
+  text-transform: uppercase;
+  text-align: center; /* Center text */
+  margin: 0 0 20px 0; /* Margin below header */
+}
+
+/* Individual Card Styles */
+#dashboard .card {
+  background-color: #f9f9f9; /* Light background for cards */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  flex: 1 1 calc(33.333% - 20px); /* Three cards per row with gap */
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
+  text-align: center; /* Center text inside cards */
+}
+
+/* Card Header */
+#dashboard .card h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+/* Card Content */
+#dashboard .card p {
+  font-size: 1.5em;
+  color: #333;
+  margin: 5px 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  #dashboard {
+    padding: 15px;
+    margin: 15px;
+    flex-direction: column; /* Stack cards vertically on smaller screens */
+  }
+
+  #dashboard .card {
+    flex: 1 1 100%; /* Full width for cards on small screens */
+  }
+}
+
+
+/* Shopping List Form Styles */
+#shopping-list-form {
+  background-color: #fff;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px; /* Centers the form */
+  margin-left: auto; /* Centers the form */
+  margin-right: auto; /* Centers the form */
+}
+
+/* Shopping List Form Header */
+#shopping-list-form h2 {
+  background-color: #9a74db; /* Purplish/lilac color */
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px 8px 0 0; /* Rounded top corners */
+  margin: -20px -20px 20px -20px; /* Extends header beyond form */
+  font-size: 1.5em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Input and Button Styles */
+#shopping-list-form input,
+#shopping-list-form button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+/* Button Styles */
+#shopping-list-form button {
+  background-color: #9a74db; /* Purplish/lilac color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#shopping-list-form button:hover {
+  background-color: #7c5fb8; /* Darker shade on hover */
+}
+
+/* Items Container Styles */
+#items-container {
+  margin-top: 10px;
+}
+
+/* Shopping Lists Container */
+#shopping-lists {
+  margin-top: 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  #shopping-list-form {
+    padding: 15px;
+    margin: 15px;
+  }
+
+  #shopping-list-form input,
+  #shopping-list-form button {
+    font-size: 14px;
+  }
+}
+
+
+/* Tables Section */
+/* Card Styles for Tables */
+/* Dashboard Section */
+/* Dashboard Section */
+#tables-section {
+  padding: 20px;
+}
+
+/* Card Styles */
+.table-card {
+  background-color: #fff; /* White background for card */
+  border-radius: 12px; /* More rounded corners for a softer look */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Enhanced card shadow effect */
+  padding: 20px; /* Padding inside the card */
+  margin-bottom: 20px; /* Space between cards */
+  overflow: hidden; /* Ensure rounded corners apply to table content */
+}
+
+/* Card Header */
+.table-card h3 {
+  color: #9a74db; /* Purplish color for card headers */
+  margin-bottom: 15px;
+  font-size: 1.4em; /* Slightly larger font size */
+}
+
+/* General Table Styles */
+table {
+  width: 100%;
+  border-collapse: separate; /* Use separate borders for rounded corners */
+  border-spacing: 0; /* Remove space between borders */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Ensure rounded corners apply */
+}
+
+/* Table Headers */
+table th {
+  background-color: #ff6666; /* Red background for table headers */
+  color: white; /* White text color for contrast */
+  font-weight: bold;
+  padding: 14px; /* Increased padding for a better look */
+  border-bottom: 2px solid #ddd;
+  text-align: left;
+  position: sticky; /* Makes header sticky */
+  top: 0; /* Sticks at the top */
+  z-index: 1; /* Ensures header is above other content */
+}
+
+/* Table Rows */
+table tbody tr {
+  transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+table tbody tr:hover {
+  background-color: #f9f9f9; /* Slightly lighter highlight color */
+}
+
+/* Table Cells */
+table td {
+  padding: 14px; /* Increased padding for better readability */
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Buttons inside Tables */
+table button {
+  background-color: #9a74db; /* Purplish/lilac color */
+  color: white;
+  border: none;
+  padding: 8px 14px; /* Larger padding for better click area */
+  border-radius: 6px; /* More rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+}
+
+/* Hover Effect for Table Buttons */
+table button:hover {
+  background-color: #7c5fb8; /* Darker shade on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Enhance shadow on hover */
+}
+
+/* Responsive Styles for Tables */
+@media (max-width: 768px) {
+  table, table thead, table tbody, table th, table td, table tr {
+    display: block;
+  }
+
+  table thead {
+    display: none;
+  }
+
+  table tr {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #ddd; /* Border for separation */
+  }
+
+  table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px; /* Adjusted padding */
+    position: relative;
+    border-bottom: 1px solid #ddd; /* Border for separation */
+  }
+
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 0.5em;
+    font-weight: bold;
+    white-space: nowrap; /* Prevent text wrapping */
+    color: #333; /* Darker color for better readability */
+  }
+}
+
+/* Report Section */
+#report-section {
+  padding: 20px;
+}
+
+/* Report Card Container */
+.report-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  margin-bottom: 20px;
+  max-width: 800px; /* Limits width for a centered layout */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center; /* Centers text inside the card */
+}
+
+/* Buttons Container */
+.buttons-container {
+  margin-top: 20px;
+}
+
+/* Buttons Styles */
+/* Report Section */
+#report-section {
+  padding: 20px;
+}
+
+/* Report Card Container */
+.report-card  {
+  background-color: #fff; /* White background for cards */
+  border-radius: 10px; /* Rounded corners for cards */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow effect */
+  padding: 20px; /* Padding inside the card */
+  margin-bottom: 20px; /* Space below each card */
+  box-sizing: border-box; /* Ensure padding and border are included in width */
+  margin-left: auto; /* Auto margin to center */
+  margin-right: auto; /* Auto margin to center */
+  max-width: 1200px; /* Limit the maximum width of cards */
+}
+
+
+/* Input Group */
+.input-group {
+  margin-bottom: 15px;
+  text-align: left; /* Align labels to the left */
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333; /* Darker text color for labels */
+}
+
+.input-group input {
+  width: calc(100% - 22px); /* Full width minus padding */
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+/* Buttons Container */
+.buttons-container {
+  margin-top: 20px;
+}
+
+/* Buttons Styles */
+.report-card button {
+  background-color: #9a74db; /* Purplish/lilac color */
+  color: white;
+  border: none;
+  padding: 12px 24px; /* Larger padding for better click area */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 5px;
+  font-size: 1.1em; /* Slightly larger font size for readability */
+}
+
+.report-card button:hover {
+  background-color: #7c5fb8; /* Darker shade on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Report Output Card */
+.report-output {
+  background-color: #fff; /* White background for cards */
+  border-radius: 10px; /* Rounded corners for cards */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow effect */
+  padding: 20px; /* Padding inside the card */
+  margin-bottom: 20px; /* Space below each card */
+  box-sizing: border-box; /* Ensure padding and border are included in width */
+  margin-left: auto; /* Auto margin to center */
+  margin-right: auto; /* Auto margin to center */
+  max-width: 1200px; /* Limit the maximum width of cards */
+}
+
+
+/* Report Tables */
+.report-output table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 20px; /* Space between the header and table */
+  font-size: 1.1em; /* Increased font size for better readability */
+}
+
+/* Table Headers */
+.report-output table th {
+  background-color: #ff6666; /* Red background for table headers */
+  color: white;
+  font-weight: bold;
+  padding: 16px; /* Increased padding for a better look */
+  border-bottom: 2px solid #ddd;
+  text-align: left;
+}
+
+/* Table Rows */
+.report-output table tbody tr {
+  transition: background-color 0.3s ease;
+}
+
+.report-output table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Table Cells */
+.report-output table td {
+  padding: 16px; /* Increased padding for better readability */
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+
+
+/* General Styles */
+/* General Styles */
+/* General Styles */
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5; /* Light background color for the page */
+  margin: 0;
+  padding: 0;
+}
+
+/* Container for Shopping Lists and Form */
+#shopping-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Space between the two columns */
+  padding: 20px; /* Padding around the container */
+  box-sizing: border-box;
+}
+
+/* Shopping List Column */
+
+/* Add Shopping List Form Column */
+
+
+/* Shopping List Cards */
+/* Adjusted Shopping List Cards */
+
 
 .card {
-    border: 1px solid #ddd;
-    padding: 16px;
-    margin: 16px;
-    border-radius: 8px;
+  background-color: #fff; /* White background for cards */
+  border-radius: 10px; /* Rounded corners for cards */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow effect */
+  padding: 20px; /* Padding inside the card */
+  margin-bottom: 20px; /* Space below each card */
+  box-sizing: border-box; /* Ensure padding and border are included in width */
+  margin-left: auto; /* Auto margin to center */
+  margin-right: auto; /* Auto margin to center */
+  max-width: 1200px; /* Limit the maximum width of cards */
 }
 
+
+/* Card Heading */
+.card h2 {
+  background-color: #ff6666; /* Red background for heading */
+  color: white; /* White text color */
+  padding: 10px;
+  margin: -20px -20px 20px -20px; /* Expand heading background to card edges */
+  border-radius: 10px 10px 0 0; /* Rounded top corners */
+}
+
+/* Item Container */
+#items-container, #edit-items-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  gap: 10px; /* Space between items */
+}
+
+/* Item */
+.item {
+  background-color: #fff; /* White background for items */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+  padding: 10px; /* Padding inside items */
+  width: 100%; /* Full width for each item */
+  box-sizing: border-box; /* Include padding in width */
+}
+
+/* Flex Layout for Forms */
+#shopping-list-form, #edit-shopping-list-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between form elements */
+}
+
+/* Form Buttons */
 button {
-    margin: 4px;
+  background-color: #9a74db; /* Purplish/lilac color */
+  color: white;
+  border: none;
+  padding: 10px 20px; /* Larger padding for better click area */
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+}
+
+/* Hover Effect for Buttons */
+button:hover {
+  background-color: #7c5fb8; /* Darker shade on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+/* Edit Form */
+#edit-shopping-list-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Space between form elements */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  #shopping-container {
+    flex-direction: column; /* Stack columns vertically on smaller screens */
+  }
+
+  .card {
+    width: 100%; /* Full width for cards on smaller screens */
+  }
+
+  #items-container {
+    flex-direction: column; /* Stack items vertically */
+  }
+}
+/* Table Styles for Shopping Lists */
+.shopping-list-table {
+  width: 100%; /* Full width of the container */
+  border-collapse: collapse; /* Collapse table borders */
+  margin-top: 20px; /* Space above the table */
+}
+
+.shopping-list-table th, .shopping-list-table td {
+  border: 1px solid #ddd; /* Light gray border for cells */
+  padding: 10px; /* Padding inside cells */
+  text-align: left; /* Left align text */
+}
+
+.shopping-list-table th {
+  background-color: #f2f2f2; /* Light gray background for headers */
+  color: #333; /* Darker text color */
+}
+
+.shopping-list-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9; /* Alternating row background color */
+}
+
+.shopping-list-table tfoot {
+  font-weight: bold; /* Bold text for footer */
+}
+
+.shopping-list-table tfoot td {
+  border-top: 2px solid #ddd; /* Top border for footer */
+}
+.dashboard-heading {
+  font-size: 2em; /* Adjust the size as needed */
+  color: #4A1F55; /* Deep purple color for a professional look */
+  text-align: center; /* Center the text */
+  margin-bottom: 20px; /* Space below the heading */
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3); /* More pronounced shadow effect */
+  background-color: #fff; /* White background for a clean look */
+  padding: 15px; /* Space inside the heading */
+  border: 1px solid #E63946; /* Red border for a striking appearance */
+  border-radius: 4px; /* Slightly rounded corners */
+}
+h3{
+  color: #4A1F55;
 }

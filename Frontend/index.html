@@ -7,89 +7,52 @@
   <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-  <h1>Expense Tracker Dashboard</h1>
+  <h2 class="dashboard-heading">Expense & Income Tracker Dashboard</h2>
 
-  <!-- Dashboard Summary -->
   <section id="dashboard">
     <h2>Financial Summary</h2>
-    <div id="total-expenses">Total Expenses: $0</div>
-    <div id="total-income">Total Income: $0</div>
-    <div id="balance">Balance: $0</div>
+    <div class="card" id="total-expenses">
+      <h3>Total Expenses</h3>
+      <p>$0</p>
+    </div>
+    <div class="card" id="total-income">
+      <h3>Total Income</h3>
+      <p>$0</p>
+    </div>
+    <div class="card" id="balance">
+      <h3>Balance</h3>
+      <p>$0</p>
+    </div>
   </section>
-
+  
   <!-- Expense Form -->
-  <section id="expense-section">
-    <h2>Add Expense</h2>
-    <form id="expense-form">
-      <input type="text" id="category" placeholder="Category" required>
-      <input type="number" id="expense-amount" placeholder="Amount" required>
-      <input type="date" id="expense-date" required>
-      <textarea id="expense-notes" placeholder="Notes"></textarea>
-      <button type="submit">Add Expense</button>
-    </form>
-  </section>
-
-  <!-- Income Form -->
-  <section id="income-section">
-    <h2>Add Income</h2>
+  <div class="forms">
+  <section id="income-section" class="styled-form">
+    <div class="form-header">ADD INCOME</div>
     <form id="income-form">
       <input type="text" id="income-source" placeholder="Source" required>
       <input type="number" id="income-amount" placeholder="Amount" required>
       <input type="date" id="income-date" required>
       <textarea id="income-notes" placeholder="Notes"></textarea>
-      <button type="submit">Add Income</button>
+      <button type="submit" class="form-btn">Add Income</button>
     </form>
   </section>
-  <!-- Edit Shopping List Form (Initially hidden) -->
-<div id="edit-shopping-list-form" style="display: none;">
-  <h2>Edit Shopping List</h2>
-  <form id="edit-form">
-    <label for="edit-list-name">List Name:</label>
-    <input type="text" id="edit-list-name" required>
-    
-    <div id="edit-items-container"></div>
-    
-    <button type="button" id="add-edit-item-button">Add Item</button>
-    <button type="submit">Save Changes</button>
-    <button type="button" id="cancel-edit-button">Cancel</button>
-  </form>
+  
+  <section id="expense-section" class="styled-form">
+    <div class="form-header">ADD EXPENSE</div>
+    <form id="expense-form">
+      <input type="text" id="category" placeholder="Category" required>
+      <input type="number" id="expense-amount" placeholder="Amount" required>
+      <input type="date" id="expense-date" required>
+      <textarea id="expense-notes" placeholder="Notes"></textarea>
+      <button type="submit" class="form-btn">Add Expense</button>
+    </form>
+  </section>
 </div>
-
-
-  <!-- Shopping List Form -->
-  <!-- index.html -->
-  <form id="shopping-list-form">
-    <input type="text" id="list-name" placeholder="List Name" required>
-    <div id="items-container"></div>
-    <button type="button" id="add-item-button">Add Item</button>
-    <button type="submit">Save List</button>
-  </form>
-  <div id="shopping-lists"></div>
-  
-  
-
-
-  <!-- Reports Section -->
-<!-- Reports Section -->
-<section id="report-section">
-  <h2>Generate Reports</h2>
-  <input type="date" id="start-date">
-  <input type="date" id="end-date">
-  <input type="text" id="category" placeholder="Category">
-  <button>Daily Report</button>
-  <button>Weekly Report</button>
-  <button>Monthly Report</button>
-  <button>Yearly Report</button>
-  <h3>Report Output</h3>
-  <div id="report-output"></div>
-</section>
-
-
-
-
-  <!-- Tables Section -->
-  <section id="tables-section">
-    <h2>Expense List</h2>
+<section id="tables-section">
+  <!-- Expense List Card -->
+  <div class="table-card">
+    <h3>Expense List</h3>
     <table id="expenses-table">
       <thead>
         <tr>
@@ -102,8 +65,11 @@
       </thead>
       <tbody></tbody>
     </table>
+  </div>
 
-    <h2>Income List</h2>
+  <!-- Income List Card -->
+  <div class="table-card">
+    <h3>Income List</h3>
     <table id="income-table">
       <thead>
         <tr>
@@ -116,33 +82,118 @@
       </thead>
       <tbody></tbody>
     </table>
-  </section>
+  </div>
+</section>
+
 
   <!-- Update Expense Form -->
-  <section id="update-section">
-    <h2>Update Expense</h2>
+   <div class="forms">
+  <section id="update-section" class="styled-form">
+    <h2 class="form-header">Update Expense</h2>
     <form id="update-form">
       <input type="hidden" id="update-id">
       <input type="text" id="update-category" placeholder="Category" required>
       <input type="number" id="update-amount" placeholder="Amount" required>
       <input type="date" id="update-date" required>
       <textarea id="update-notes" placeholder="Notes"></textarea>
-      <button type="submit">Update Expense</button>
+      <button type="submit" class="form-btn">Update Expense</button>
     </form>
   </section>
 
   <!-- Update Income Form -->
-  <section id="update-income-section">
-    <h2>Update Income</h2>
+  <section id="update-income-section" class="styled-form">
+    <h2 class="form-header">Update Income</h2>
     <form id="update-income-form">
       <input type="hidden" id="update-income-id">
       <input type="text" id="update-income-source" placeholder="Source" required>
       <input type="number" id="update-income-amount" placeholder="Amount" required>
       <input type="date" id="update-income-date" required>
       <textarea id="update-income-notes" placeholder="Notes"></textarea>
-      <button type="submit">Update Income</button>
+      <button type="submit" class="form-btn">Update Income</button>
     </form>
   </section>
+</div>
+
+
+
+  <!-- Shopping List Form -->
+  <!-- index.html -->
+  <!-- Shopping List Form -->
+<!-- Container for Shopping Lists and Form -->
+
+<div id="shopping-lists"></div>
+
+<div class="forms">
+  <div id="edit-shopping-list-form" class="styled-form">
+    <h2 class="form-header">Edit Shopping List</h2>
+    <form id="edit-form">
+      <label for="edit-list-name">List Name:</label>
+      <input type="text" id="edit-list-name" required>
+      <div id="edit-items-container"></div>
+      <button type="button" id="add-edit-item-button" class="form-btn">Add Item</button>
+      <button type="submit" class="form-btn">Save Changes</button>
+      <button type="button" id="cancel-edit-button" class="form-btn">Cancel</button>
+    </form>
+  </div>
+
+  <div id="shopping-list-form-container" class="styled-form">
+    <form id="shopping-list-form">
+      <h2 class="form-header">Create Shopping List</h2>
+      <input type="text" id="list-name" placeholder="List Name" required>
+      <div id="items-container"></div>
+      <button type="button" id="add-item-button" class="form-btn">Add Item</button>
+      <button type="submit" class="form-btn">Save List</button>
+    </form>
+  </div>
+</div>
+
+    <!-- Edit Shopping List Form (Initially hidden) -->
+    
+
+
+
+  
+
+
+  <!-- Reports Section -->
+<!-- Reports Section -->
+<section id="report-section">
+  
+  <div class="report-card">
+    <h3 style="color:#4A1F55; ">Generate  Expense Reports </h3>
+    <div class="input-group">
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date">
+    </div>
+    <div class="input-group">
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date">
+    </div>
+    <div class="input-group">
+      <label for="category">Category:</label>
+      <input type="text" id="category" placeholder="Category">
+    </div>
+    <div class="buttons-container">
+      <button>Daily Report</button>
+      <button>Weekly Report</button>
+      <button>Monthly Report</button>
+      <button>Yearly Report</button>
+    </div>
+  </div>
+  <div id="report-output" class="report-output">
+    <!-- Report tables will be inserted here -->
+  </div>
+</section>
+
+
+
+
+
+
+
+
+  <!-- Tables Section -->
+  <!-- Tables Section -->
 
   <footer></footer>
   <script src="scripts/main.js"></script>

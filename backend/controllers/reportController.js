@@ -19,9 +19,9 @@ const summarizeByWeek = (expenses) => {
     expenses.forEach(expense => {
         const date = new Date(expense.date);
         const startOfWeek = new Date(date);
-        startOfWeek.setDate(date.getDate() - date.getDay()); // Get start of week (Sunday)
+        startOfWeek.setDate(date.getDate() - date.getDay());
         const endOfWeek = new Date(date);
-        endOfWeek.setDate(date.getDate() + (6 - date.getDay())); // Get end of week (Saturday)
+        endOfWeek.setDate(date.getDate() + (6 - date.getDay()));
 
         const weekKey = `${startOfWeek.toISOString().split('T')[0]} to ${endOfWeek.toISOString().split('T')[0]}`;
         
@@ -65,7 +65,13 @@ exports.generateReport = async (req, res) => {
 
     try {
         let filter = {};
-        if (category) filter.category = category;
+
+        // Filter by category if provided (case-insensitive)
+        if (category) {
+            filter.category = { $regex: new RegExp(category, 'i') }; // Case-insensitive regex match
+        }
+
+        // Filter by date range if provided
         if (startDate && endDate) {
             filter.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
         } else if (startDate) {
@@ -74,20 +80,20 @@ exports.generateReport = async (req, res) => {
             filter.date = { $lte: new Date(endDate) };
         }
 
-        console.log('Filter:', filter);
+        console.log('Filter:', filter); // Debug: Check the constructed filter
 
+        // Fetch filtered expenses from the database
         const expenses = await Expense.find(filter);
 
-        console.log('Expenses:', expenses);
+        console.log('Expenses:', expenses); // Debug: Check the retrieved expenses
 
+        // Summarize expenses by the specified period
         const summary = {
             daily: summarizeByDay(expenses),
             weekly: summarizeByWeek(expenses),
             monthly: summarizeByMonth(expenses),
             yearly: summarizeByYear(expenses)
         };
-
-        console.log('Summary:', summary);
 
         res.json(summary);
     } catch (error) {
