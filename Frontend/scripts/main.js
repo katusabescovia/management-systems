@@ -229,6 +229,9 @@ document.querySelectorAll('#report-section button').forEach(button => {
       const endDate = document.getElementById('end-date').value;
       const category = document.getElementById('category').value.trim(); // Trim any extra spaces
 
+      // Debug: Check the captured category value
+      console.log('Category:', category);
+
       const url = `http://localhost:5000/api/reports?period=${encodeURIComponent(period)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&category=${encodeURIComponent(category)}`;
 
       console.log('Request URL:', url); // Debug: Check the request URL
@@ -250,16 +253,16 @@ document.querySelectorAll('#report-section button').forEach(button => {
 function displayReports(report) {
   const reportOutput = document.getElementById('report-output');
   reportOutput.innerHTML = `
-      <h3>Daily Report</h3>
+      <h3 style="color: #7c5fb8;">Daily Report</h3>
       ${generateReportTable(report.daily)}
 
-      <h3>Weekly Report</h3>
+      <h3 style="color: #7c5fb8;">Weekly Report</h3>
       ${generateReportTable(report.weekly)}
 
-      <h3>Monthly Report</h3>
+      <h3 style="color: #7c5fb8;">Monthly Report</h3>
       ${generateReportTable(report.monthly)}
 
-      <h3>Yearly Report</h3>
+      <h3 style="color: #7c5fb8;">Yearly Report</h3>
       ${generateReportTable(report.yearly)}
   `;
 }
@@ -290,7 +293,6 @@ function generateReportTable(data) {
 }
 
 
-
 // main.js
 // main.js
 // main.js
@@ -301,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-item-button').addEventListener('click', addItem);
   document.getElementById('add-edit-item-button').addEventListener('click', addEditItem);
   document.getElementById('cancel-edit-button').addEventListener('click', cancelEdit);
+  document.getElementById('edit-form').addEventListener('submit', saveEdit); // Added this event listener for edit form submission
 });
 
 let editingListId = null;
@@ -310,13 +313,13 @@ function addItem() {
   const itemDiv = document.createElement('div');
   itemDiv.classList.add('item');
   itemDiv.innerHTML = `
-    <input type="number" class="item-number" placeholder="Item Number" required>
-    <input type="text" class="item-name" placeholder="Item Name" required>
-    <input type="number" class="quantity" placeholder="Quantity" required>
-    <input type="number" class="unit-price" placeholder="Unit Price" required>
-    <input type="number" class="total-cost" placeholder="Total Cost" readonly>
-    <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
-    <button type="button" onclick="removeItem(this)">Remove Item</button>
+      <input type="number" class="item-number" placeholder="Item Number" required>
+      <input type="text" class="item-name" placeholder="Item Name" required>
+      <input type="number" class="quantity" placeholder="Quantity" required>
+      <input type="number" class="unit-price" placeholder="Unit Price" required>
+      <input type="number" class="total-cost" placeholder="Total Cost" readonly>
+      <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
+      <button type="button" onclick="removeItem(this)">Remove Item</button>
   `;
   container.appendChild(itemDiv);
 }
@@ -326,13 +329,13 @@ function addEditItem() {
   const itemDiv = document.createElement('div');
   itemDiv.classList.add('item');
   itemDiv.innerHTML = `
-    <input type="number" class="item-number" placeholder="Item Number" required>
-    <input type="text" class="item-name" placeholder="Item Name" required>
-    <input type="number" class="quantity" placeholder="Quantity" required>
-    <input type="number" class="unit-price" placeholder="Unit Price" required>
-    <input type="number" class="total-cost" placeholder="Total Cost" readonly>
-    <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
-    <button type="button" onclick="removeItem(this)">Remove Item</button>
+      <input type="number" class="item-number" placeholder="Item Number" required>
+      <input type="text" class="item-name" placeholder="Item Name" required>
+      <input type="number" class="quantity" placeholder="Quantity" required>
+      <input type="number" class="unit-price" placeholder="Unit Price" required>
+      <input type="number" class="total-cost" placeholder="Total Cost" readonly>
+      <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
+      <button type="button" onclick="removeItem(this)">Remove Item</button>
   `;
   container.appendChild(itemDiv);
 }
@@ -350,63 +353,58 @@ function removeItem(button) {
 
 async function displayShoppingLists() {
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/shoppinglists');
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Response Status:', response.status, response.statusText);
-      console.error('Response Body:', errorText);
-      throw new Error(`Failed to fetch shopping lists: ${errorText}`);
-    }
-    const shoppingLists = await response.json();
-    const container = document.getElementById('shopping-lists');
-    container.innerHTML = '';
-    
-    shoppingLists.forEach(list => {
-      const listTable = document.createElement('table');
-      listTable.classList.add('shopping-list-table');
-      listTable.innerHTML = `
-        <thead>
-          <tr>
-            <th>Item Number</th>
-            <th>Item Name</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-            <th>Total Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${list.items.map(item => `
-            <tr>
-              <td>${item.itemNumber}</td>
-              <td>${item.itemName}</td>
-              <td>${item.quantity}</td>
-              <td>${item.unitPrice.toFixed(2)}</td>
-              <td>${item.totalCost.toFixed(2)}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="4"><strong>Overall Total:</strong></td>
-            <td>${list.overallTotal.toFixed(2)}</td>
-          </tr>
-        </tfoot>
-      `;
-      const listCard = document.createElement('div');
-      listCard.classList.add('card');
-      listCard.innerHTML = `
-        <h2>${list.name}</h2>
-      `;
-      listCard.appendChild(listTable);
-      listCard.innerHTML += `
-        <button onclick="editShoppingList('${list._id}')">Edit</button>
-        <button onclick="deleteShoppingList('${list._id}')">Delete</button>
-      `;
-      container.appendChild(listCard);
-    });
+      const response = await fetch('http://127.0.0.1:5000/api/shoppinglists');
+      if (!response.ok) throw new Error(`Failed to fetch shopping lists: ${response.statusText}`);
+
+      const shoppingLists = await response.json();
+      const container = document.getElementById('shopping-lists');
+      container.innerHTML = '';
+
+      shoppingLists.forEach(list => {
+          const listTable = document.createElement('table');
+          listTable.classList.add('shopping-list-table');
+          listTable.innerHTML = `
+              <thead>
+                  <tr>
+                      <th>Item Number</th>
+                      <th>Item Name</th>
+                      <th>Quantity</th>
+                      <th>Unit Price</th>
+                      <th>Total Cost</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  ${list.items.map(item => `
+                      <tr>
+                          <td>${item.itemNumber}</td>
+                          <td>${item.itemName}</td>
+                          <td>${item.quantity}</td>
+                          <td>${item.unitPrice.toFixed(2)}</td>
+                          <td>${item.totalCost.toFixed(2)}</td>
+                      </tr>
+                  `).join('')}
+              </tbody>
+              <tfoot>
+                  <tr>
+                      <td colspan="4"><strong>Overall Total:</strong></td>
+                      <td>${list.overallTotal.toFixed(2)}</td>
+                  </tr>
+              </tfoot>
+          `;
+
+          const listCard = document.createElement('div');
+          listCard.classList.add('card');
+          listCard.innerHTML = `<h2>${list.name}</h2>`;
+          listCard.appendChild(listTable);
+          listCard.innerHTML += `
+              <button onclick="editShoppingList('${list._id}')">Edit</button>
+              <button onclick="deleteShoppingList('${list._id}')">Delete</button>
+          `;
+          container.appendChild(listCard);
+      });
   } catch (error) {
-    console.error('An error occurred while fetching shopping lists:', error.message);
-    alert(`Error: ${error.message}`);
+      console.error('An error occurred while fetching shopping lists:', error.message);
+      alert(`Error: ${error.message}`);
   }
 }
 
@@ -414,75 +412,67 @@ async function handleFormSubmit(event) {
   event.preventDefault();
 
   const name = document.getElementById('list-name').value;
-  const items = Array.from(document.querySelectorAll('.item')).map(item => ({
-    itemNumber: item.querySelector('.item-number').value,
-    itemName: item.querySelector('.item-name').value,
-    quantity: parseInt(item.querySelector('.quantity').value, 10),
-    unitPrice: parseFloat(item.querySelector('.unit-price').value),
-    totalCost: parseFloat(item.querySelector('.total-cost').value),
+  const items = Array.from(document.querySelectorAll('#items-container .item')).map(item => ({
+      itemNumber: item.querySelector('.item-number').value,
+      itemName: item.querySelector('.item-name').value,
+      quantity: parseInt(item.querySelector('.quantity').value, 10),
+      unitPrice: parseFloat(item.querySelector('.unit-price').value),
+      totalCost: parseFloat(item.querySelector('.total-cost').value),
   }));
   const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
 
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/shoppinglists', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, items, overallTotal }),
-    });
+      const response = await fetch('http://127.0.0.1:5000/api/shoppinglists', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, items, overallTotal }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Response Status:', response.status, response.statusText);
-      console.error('Response Body:', errorText);
-      throw new Error(`Failed to save shopping list: ${errorText}`);
-    }
+      if (!response.ok) throw new Error(`Failed to save shopping list: ${response.statusText}`);
 
-    const result = await response.json();
-    console.log('Shopping list saved successfully:', result);
-    await displayShoppingLists();
-    event.target.reset();
+      await displayShoppingLists();
+      event.target.reset();
   } catch (error) {
-    console.error('An error occurred while saving the shopping list:', error.message);
-    alert(`Error: ${error.message}`);
+      console.error('An error occurred while saving the shopping list:', error.message);
+      alert(`Error: ${error.message}`);
   }
 }
 
 async function editShoppingList(listId) {
   try {
-    const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Response Status:', response.status, response.statusText);
-      console.error('Response Body:', errorText);
-      throw new Error(`Failed to fetch shopping list: ${errorText}`);
-    }
-    const list = await response.json();
-    editingListId = listId;
-    showEditForm(list);
+      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
+      if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
+
+      const list = await response.json();
+      editingListId = listId;
+      showEditForm(list);
   } catch (error) {
-    console.error('An error occurred while fetching the shopping list:', error.message);
-    alert(`Error: ${error.message}`);
+      console.error('An error occurred while fetching the shopping list:', error.message);
+      alert(`Error: ${error.message}`);
   }
 }
 
 function showEditForm(list) {
-  document.getElementById('edit-shopping-list-form').style.display = 'block';
+  document.getElementById('shopping-list-form-container').style.display = 'none';
+  document.getElementById('edit-shopping-list-container').style.display = 'block';
+
   document.getElementById('edit-list-name').value = list.name;
   const editItemsContainer = document.getElementById('edit-items-container');
   editItemsContainer.innerHTML = '';
+
   list.items.forEach(item => {
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('item');
-    itemDiv.innerHTML = `
-      <input type="number" class="item-number" value="${item.itemNumber}" placeholder="Item Number" required>
-      <input type="text" class="item-name" value="${item.itemName}" placeholder="Item Name" required>
-      <input type="number" class="quantity" value="${item.quantity}" placeholder="Quantity" required>
-      <input type="number" class="unit-price" value="${item.unitPrice}" placeholder="Unit Price" required>
-      <input type="number" class="total-cost" value="${item.totalCost}" placeholder="Total Cost" readonly>
-      <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
-      <button type="button" onclick="removeItem(this)">Remove Item</button>
-    `;
-    editItemsContainer.appendChild(itemDiv);
+      const itemDiv = document.createElement('div');
+      itemDiv.classList.add('item');
+      itemDiv.innerHTML = `
+          <input type="number" class="item-number" placeholder="Item Number" value="${item.itemNumber}" required>
+          <input type="text" class="item-name" placeholder="Item Name" value="${item.itemName}" required>
+          <input type="number" class="quantity" placeholder="Quantity" value="${item.quantity}" required>
+          <input type="number" class="unit-price" placeholder="Unit Price" value="${item.unitPrice}" required>
+          <input type="number" class="total-cost" placeholder="Total Cost" value="${item.totalCost}" readonly>
+          <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
+          <button type="button" onclick="removeItem(this)">Remove Item</button>
+      `;
+      editItemsContainer.appendChild(itemDiv);
   });
 }
 
@@ -491,64 +481,50 @@ async function saveEdit(event) {
 
   const name = document.getElementById('edit-list-name').value;
   const items = Array.from(document.querySelectorAll('#edit-items-container .item')).map(item => ({
-    itemNumber: item.querySelector('.item-number').value,
-    itemName: item.querySelector('.item-name').value,
-    quantity: parseInt(item.querySelector('.quantity').value, 10),
-    unitPrice: parseFloat(item.querySelector('.unit-price').value),
-    totalCost: parseFloat(item.querySelector('.total-cost').value),
+      itemNumber: item.querySelector('.item-number').value,
+      itemName: item.querySelector('.item-name').value,
+      quantity: parseInt(item.querySelector('.quantity').value, 10),
+      unitPrice: parseFloat(item.querySelector('.unit-price').value),
+      totalCost: parseFloat(item.querySelector('.total-cost').value),
   }));
   const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
 
   try {
-    const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${editingListId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, items, overallTotal }),
-    });
+      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${editingListId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, items, overallTotal }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Response Status:', response.status, response.statusText);
-      console.error('Response Body:', errorText);
-      throw new Error(`Failed to update shopping list: ${errorText}`);
-    }
+      if (!response.ok) throw new Error(`Failed to update shopping list: ${response.statusText}`);
 
-    const result = await response.json();
-    console.log('Shopping list updated successfully:', result);
-    await displayShoppingLists();
-    document.getElementById('edit-shopping-list-form').style.display = 'none';
+      await displayShoppingLists();
+      document.getElementById('edit-shopping-list-container').style.display = 'none';
+      document.getElementById('shopping-list-form-container').style.display = 'block';
   } catch (error) {
-    console.error('An error occurred while updating the shopping list:', error.message);
-    alert(`Error: ${error.message}`);
-  }
-}
-
-async function deleteShoppingList(listId) {
-  if (!confirm('Are you sure you want to delete this shopping list?')) return;
-
-  try {
-    const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`, {
-      method: 'DELETE',
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Response Status:', response.status, response.statusText);
-      console.error('Response Body:', errorText);
-      throw new Error(`Failed to delete shopping list: ${errorText}`);
-    }
-
-    const result = await response.json();
-    console.log('Shopping list deleted successfully:', result);
-    await displayShoppingLists();
-  } catch (error) {
-    console.error('An error occurred while deleting the shopping list:', error.message);
-    alert(`Error: ${error.message}`);
+      console.error('An error occurred while updating the shopping list:', error.message);
+      alert(`Error: ${error.message}`);
   }
 }
 
 function cancelEdit() {
-  document.getElementById('edit-shopping-list-form').style.display = 'none';
+  document.getElementById('edit-shopping-list-container').style.display = 'none';
+  document.getElementById('shopping-list-form-container').style.display = 'block';
+}
+
+async function deleteShoppingList(listId) {
+  try {
+      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`, {
+          method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error(`Failed to delete shopping list: ${response.statusText}`);
+
+      await displayShoppingLists();
+  } catch (error) {
+      console.error('An error occurred while deleting the shopping list:', error.message);
+      alert(`Error: ${error.message}`);
+  }
 }
 
 
