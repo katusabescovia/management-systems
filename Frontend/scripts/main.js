@@ -105,9 +105,9 @@ async function loadDashboard() {
     const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
     const balance = totalIncome - totalExpenses;
 
-    document.getElementById('total-expenses').textContent = `Total Expenses: $${totalExpenses.toFixed(2)}`;
-    document.getElementById('total-income').textContent = `Total Income: $${totalIncome.toFixed(2)}`;
-    document.getElementById('balance').textContent = `Balance: $${balance.toFixed(2)}`;
+    document.getElementById('total-expenses').textContent = `Total Expenses: shs ${totalExpenses.toFixed(2)}`;
+    document.getElementById('total-income').textContent = `Total Income: shs ${totalIncome.toFixed(2)}`;
+    document.getElementById('balance').textContent = `Balance: shs ${balance.toFixed(2)}`;
   } catch (error) {
     console.error('Error loading dashboard:', error);
   }
@@ -126,7 +126,7 @@ async function loadExpenses() {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${expense.category}</td>
-        <td>$${expense.amount.toFixed(2)}</td>
+        <td>shs ${expense.amount.toFixed(2)}</td>
         <td>${new Date(expense.date).toLocaleDateString()}</td>
         <td>${expense.notes}</td>
         <td>
@@ -154,7 +154,7 @@ async function loadIncomes() {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td>${income.source || 'N/A'}</td>
-        <td>$${income.amount.toFixed(2)}</td>
+        <td>shs ${income.amount.toFixed(2)}</td>
         <td>${new Date(income.date).toLocaleDateString()}</td>
         <td>${income.notes}</td>
         <td>
@@ -217,9 +217,7 @@ async function deleteIncome(id) {
   }
 }
 
-// Generate and display reports
-// Handle form submissions for reports
-// Handle form submissions for reports
+
 // Generate and display reports
 // Generate and display reports
 document.querySelectorAll('#report-section button').forEach(button => {
@@ -284,7 +282,7 @@ function generateReportTable(data) {
                       <td>${key}</td>
                       <td>${entry.details.map(d => d.category).join(', ')}</td>
                       <td>${entry.details.map(d => `$${d.amount.toFixed(2)}`).join(', ')}</td>
-                      <td>$${entry.total.toFixed(2)}</td>
+                      <td>shs ${entry.total.toFixed(2)}</td>
                   </tr>
               `).join('')}
           </tbody>
@@ -303,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-item-button').addEventListener('click', addItem);
   document.getElementById('add-edit-item-button').addEventListener('click', addEditItem);
   document.getElementById('cancel-edit-button').addEventListener('click', cancelEdit);
-  document.getElementById('edit-form').addEventListener('submit', saveEdit); // Added this event listener for edit form submission
+  document.getElementById('edit-form').addEventListener('submit', saveEdit); 
 });
 
 let editingListId = null;
@@ -361,49 +359,69 @@ async function displayShoppingLists() {
       container.innerHTML = '';
 
       shoppingLists.forEach(list => {
-          const listTable = document.createElement('table');
-          listTable.classList.add('shopping-list-table');
-          listTable.innerHTML = `
-              <thead>
-                  <tr>
-                      <th>Item Number</th>
-                      <th>Item Name</th>
-                      <th>Quantity</th>
-                      <th>Unit Price</th>
-                      <th>Total Cost</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  ${list.items.map(item => `
-                      <tr>
-                          <td>${item.itemNumber}</td>
-                          <td>${item.itemName}</td>
-                          <td>${item.quantity}</td>
-                          <td>${item.unitPrice.toFixed(2)}</td>
-                          <td>${item.totalCost.toFixed(2)}</td>
-                      </tr>
-                  `).join('')}
-              </tbody>
-              <tfoot>
-                  <tr>
-                      <td colspan="4"><strong>Overall Total:</strong></td>
-                      <td>${list.overallTotal.toFixed(2)}</td>
-                  </tr>
-              </tfoot>
-          `;
-
           const listCard = document.createElement('div');
           listCard.classList.add('card');
           listCard.innerHTML = `<h2>${list.name}</h2>`;
-          listCard.appendChild(listTable);
-          listCard.innerHTML += `
-              <button onclick="editShoppingList('${list._id}')">Edit</button>
-              <button onclick="deleteShoppingList('${list._id}')">Delete</button>
-          `;
+          listCard.addEventListener('click', () => showShoppingListDetails(list._id));  // Display full details on click
           container.appendChild(listCard);
       });
   } catch (error) {
       console.error('An error occurred while fetching shopping lists:', error.message);
+      alert(`Error: ${error.message}`);
+  }
+}
+
+async function showShoppingListDetails(listId) {
+  try {
+      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
+      if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
+
+      const list = await response.json();
+      const container = document.getElementById('shopping-lists');
+      container.innerHTML = '';
+
+      const listTable = document.createElement('table');
+      listTable.classList.add('shopping-list-table');
+      listTable.innerHTML = `
+          <thead>
+              <tr>
+                  <th>Item Number</th>
+                  <th>Item Name</th>
+                  <th>Quantity</th>
+                  <th>Unit Price</th>
+                  <th>Total Cost</th>
+              </tr>
+          </thead>
+          <tbody>
+              ${list.items.map(item => `
+                  <tr>
+                      <td>${item.itemNumber}</td>
+                      <td>${item.itemName}</td>
+                      <td>${item.quantity}</td>
+                      <td>${item.unitPrice.toFixed(2)}</td>
+                      <td>${item.totalCost.toFixed(2)}</td>
+                  </tr>
+              `).join('')}
+          </tbody>
+          <tfoot>
+              <tr>
+                  <td colspan="4"><strong>Overall Total:</strong></td>
+                  <td>${list.overallTotal.toFixed(2)}</td>
+              </tr>
+          </tfoot>
+      `;
+
+      const listCard = document.createElement('div');
+      listCard.classList.add('card');
+      listCard.innerHTML = `<h2>${list.name}</h2>`;
+      listCard.appendChild(listTable);
+      listCard.innerHTML += `
+          <button onclick="editShoppingList('${list._id}')">Edit</button>
+          <button onclick="deleteShoppingList('${list._id}')">Delete</button>
+      `;
+      container.appendChild(listCard);
+  } catch (error) {
+      console.error('An error occurred while fetching shopping list details:', error.message);
       alert(`Error: ${error.message}`);
   }
 }
@@ -498,9 +516,11 @@ async function saveEdit(event) {
 
       if (!response.ok) throw new Error(`Failed to update shopping list: ${response.statusText}`);
 
-      await displayShoppingLists();
+      editingListId = null;
+      document.getElementById('edit-form').reset();
       document.getElementById('edit-shopping-list-container').style.display = 'none';
       document.getElementById('shopping-list-form-container').style.display = 'block';
+      await displayShoppingLists();
   } catch (error) {
       console.error('An error occurred while updating the shopping list:', error.message);
       alert(`Error: ${error.message}`);
@@ -508,16 +528,15 @@ async function saveEdit(event) {
 }
 
 function cancelEdit() {
+  editingListId = null;
+  document.getElementById('edit-form').reset();
   document.getElementById('edit-shopping-list-container').style.display = 'none';
   document.getElementById('shopping-list-form-container').style.display = 'block';
 }
 
 async function deleteShoppingList(listId) {
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`, {
-          method: 'DELETE',
-      });
-
+      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error(`Failed to delete shopping list: ${response.statusText}`);
 
       await displayShoppingLists();
@@ -527,6 +546,33 @@ async function deleteShoppingList(listId) {
   }
 }
 
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+  const heading = document.getElementById('dashboard-heading');
+  const newHeadingInput = document.getElementById('new-heading');
+  const changeHeadingButton = document.getElementById('change-heading-button');
+
+  // Add event listener to the button to change the heading dynamically
+  changeHeadingButton.addEventListener('click', () => {
+    const newHeading = newHeadingInput.value;
+
+    if (newHeading.trim() !== "") {
+      heading.textContent = newHeading;
+    } else {
+      alert("Please enter a new heading.");
+    }
+  });
+
+  // Add event listener to the input to change the heading color when focused
+  newHeadingInput.addEventListener('focus', () => {
+    heading.classList.add('purple-heading');
+  });
+
+  // Remove the purple-heading class when the input loses focus
+  newHeadingInput.addEventListener('blur', () => {
+    heading.classList.remove('purple-heading');
+  });
+});
 
 
 // Initial load

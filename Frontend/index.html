@@ -8,24 +8,27 @@
 </head>
 <body>
   <div class="dashboard-card">
-    <h2 class="dashboard-heading">Expense & Income Tracker Dashboard</h2>
+    <h2 class="dashboard-heading" id="dashboard-heading">Expense & Income Tracker Dashboard</h2>
+    <input type="text" id="new-heading" placeholder="Enter new heading">
+    <button id="change-heading-button">Change Heading</button>
   </div>
+  
   
 
   <section id="dashboard">
     <h2>Financial Summary</h2>
     <div class="card" id="total-income">
       <h3>Total Income</h3>
-      <p>$0</p>
+      <p>sh 0</p>
     </div>
     <div class="card" id="total-expenses">
       <h3>Total Expenses</h3>
-      <p>$0</p>
+      <p>sh 0</p>
     </div>
     
     <div class="card" id="balance">
       <h3>Balance</h3>
-      <p>$0</p>
+      <p>sh 0</p>
     </div>
   </section>
   
@@ -198,7 +201,10 @@
   <!-- Tables Section -->
   <!-- Tables Section -->
 
-  <footer></footer>
+  <footer style="text-align: center; padding: 20px; background-color:white;color:#7c5fb8; font-size: 14px;">
+    © 2024 Katusabe Scovia. All rights reserved.
+</footer>
+
   <script src="scripts/main.js"></script>
 </body>
 </html>

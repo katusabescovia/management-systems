@@ -542,134 +542,133 @@ body {
 
 
 .card {
-  background-color: #fff; /* White background for cards */
-  border-radius: 10px; /* Rounded corners for cards */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow effect */
-  padding: 20px; /* Padding inside the card */
-  margin-bottom: 20px; /* Space below each card */
-  box-sizing: border-box; /* Ensure padding and border are included in width */
-  margin-left: auto; /* Auto margin to center */
-  margin-right: auto; /* Auto margin to center */
-  max-width: 1200px; /* Limit the maximum width of cards */
+  background-color: #fff; 
+  border-radius: 10px; 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+  padding: 20px; 
+  margin-bottom: 20px; 
+  box-sizing: border-box; 
+  margin-left: auto; 
+  margin-right: auto; 
+  max-width: 1200px; 
 }
 
 
 /* Card Heading */
 .card h2 {
-  background-color: #ff6666; /* Red background for heading */
-  color: white; /* White text color */
+  background-color: #ff6666; 
+  color: white; 
   padding: 10px;
-  margin: -20px -20px 20px -20px; /* Expand heading background to card edges */
-  border-radius: 10px 10px 0 0; /* Rounded top corners */
+  margin: -20px -20px 20px -20px; 
+  border-radius: 10px 10px 0 0; 
 }
 
 /* Item Container */
 #items-container, #edit-items-container {
   display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next line */
-  gap: 10px; /* Space between items */
+  flex-wrap: wrap; 
+  gap: 10px; 
 }
 
 /* Item */
 .item {
-  background-color: #fff; /* White background for items */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
-  padding: 10px; /* Padding inside items */
-  width: 100%; /* Full width for each item */
-  box-sizing: border-box; /* Include padding in width */
+  background-color: #fff; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  padding: 10px; 
+  width: 100%; 
+  box-sizing: border-box;
 }
 
-/* Flex Layout for Forms */
+
 #shopping-list-form, #edit-shopping-list-form {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Space between form elements */
+  gap: 20px; 
 }
 
-/* Form Buttons */
+
 button {
-  background-color: #9a74db; /* Purplish/lilac color */
+  background-color: #9a74db; 
   color: white;
   border: none;
-  padding: 10px 20px; /* Larger padding for better click area */
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
 /* Hover Effect for Buttons */
 button:hover {
-  background-color: #7c5fb8; /* Darker shade on hover */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+  background-color: #7c5fb8; 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
 }
 
 /* Edit Form */
 #edit-shopping-list-form {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Space between form elements */
+  gap: 20px; 
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
   #shopping-container {
-    flex-direction: column; /* Stack columns vertically on smaller screens */
+    flex-direction: column; 
   }
 
   .card {
-    width: 100%; /* Full width for cards on smaller screens */
+    width: 100%; 
   }
 
   #items-container {
-    flex-direction: column; /* Stack items vertically */
+    flex-direction: column; 
   }
 }
 /* Table Styles for Shopping Lists */
 .shopping-list-table {
-  width: 100%; /* Full width of the container */
-  border-collapse: collapse; /* Collapse table borders */
-  margin-top: 20px; /* Space above the table */
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 20px; 
 }
 
 .shopping-list-table th, .shopping-list-table td {
-  border: 1px solid #ddd; /* Light gray border for cells */
-  padding: 10px; /* Padding inside cells */
-  text-align: left; /* Left align text */
+  border: 1px solid #ddd; 
+  padding: 10px; 
+  text-align: left; 
 }
 
 .shopping-list-table th {
-  background-color: #f2f2f2; /* Light gray background for headers */
-  color: #333; /* Darker text color */
+  background-color: #f2f2f2; 
+  color: #333; 
 }
 
 .shopping-list-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9; /* Alternating row background color */
+  background-color: #f9f9f9; 
 }
 
 .shopping-list-table tfoot {
-  font-weight: bold; /* Bold text for footer */
-}
+  font-weight: bold; }
 
 .shopping-list-table tfoot td {
-  border-top: 2px solid #ddd; /* Top border for footer */
+  border-top: 2px solid #ddd; 
 }
 .dashboard-heading {
    /* Larger text size for more emphasis */
-  color: #6A0DAD; /* Purple color for the text */
-  text-align: center; /* Center the text */
-  margin-bottom: 30px; /* Increase space below the heading */
-  background-color: #fff; /* Clean white background */
-  padding: 20px 30px; /* Extra padding for better spacing */
+  color: #6A0DAD; 
+  text-align: center; 
+  margin-bottom: 30px; 
+  background-color: #fff; 
+  padding: 20px 30px; 
   
   border-radius: 8px; /* More rounded corners for a smooth look */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
-  font-family: 'Poppins', sans-serif; /* Modern, clean font */
-  letter-spacing: 1px; /* Slightly spaced letters for readability */
-  text-transform: uppercase; /* Make the text uppercase for importance */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  font-family: 'Poppins', sans-serif; 
+  letter-spacing: 1px; 
+  text-transform: uppercase; 
 }
 
 .dashboard-heading:hover {
@@ -678,3 +677,46 @@ button:hover {
   border-color: #C72C41; /* Darker red border on hover */
 }
 
+
+
+
+/* Full-height and full-width background image */
+
+
+/* Overlay for the background image */
+/* Importing Google Fonts */
+.dashboard-heading {
+  margin-bottom: 20px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-color: #6A0DAD; 
+}
+
+#new-heading {
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 80%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#change-heading-button {
+  padding: 10px 20px;
+  background-color: #9a74db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#change-heading-button:hover {
+  background-color: #6A0DAD;
+}
+
+.purple-heading {
+  color: #6A0DAD; /* Purple color */
+}

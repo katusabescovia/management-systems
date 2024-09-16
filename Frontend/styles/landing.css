@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  color: #333; /* Elegant dark text */
+}
+
+/* Container for content, vertically and horizontally centered */
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('/Frontend/images/aa.webp') no-repeat center center/cover; /* Background image */
+  background-size: cover;
+  position: relative;
+}
+
+/* Adding a translucent overlay for readability over the background image */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5); 
+}
+.content {
+  position: relative; /* Keeps content above the overlay */
+  text-align: center;
+  color: #6A0DAD; /* Purple text for better contrast */
+  max-width: 600px;
+  z-index: 1; /* Ensures it stays above background and overlay */
+}
+
+h1 {
+ margin-top: 30px; 
+  color: #6A0DAD; /* Purple color for h1 */
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase; 
+  transition: color 0.3s ease;
+}
+
+p {
+    margin-top: 10px;
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  color: #6A0DAD; 
+  line-height: 1.6;
+}
+
+
+.cta-button {
+  background-color: #6A0DAD; 
+  color: white;
+  padding: 15px 30px;
+  text-decoration: none;
+  font-size: 1.5rem; 
+  border-radius: 50px;
+  box-shadow: 0 8px 15px rgba(106, 13, 173, 0.3); 
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 100px;
+}
+
+.cta-button:hover {
+  background-color: #9a74db; 
+  box-shadow: 0 15px 25px rgba(154, 116, 219, 0.3);
+  transform: translateY(-3px);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem; 
+  }
+  
+  p {
+    font-size: 1.1rem; 
+  }
+
+  .cta-button {
+    font-size: 1.2rem; 
+  }
+}
