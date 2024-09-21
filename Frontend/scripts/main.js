@@ -220,73 +220,94 @@ async function deleteIncome(id) {
 
 // Generate and display reports
 // Generate and display reports
+// Add event listeners to all report buttons
+// Attach event listeners to report buttons
 document.querySelectorAll('#report-section button').forEach(button => {
   button.addEventListener('click', async (e) => {
-      const period = e.target.textContent.toLowerCase();
-      const startDate = document.getElementById('start-date').value;
-      const endDate = document.getElementById('end-date').value;
-      const category = document.getElementById('category').value.trim(); // Trim any extra spaces
+    e.preventDefault(); // Prevent default form behavior
 
-      // Debug: Check the captured category value
-      console.log('Category:', category);
+    // Capture the period based on button text
+    const period = e.target.textContent.trim().toLowerCase();
+    const startDate = document.getElementById('start-date').value.trim();
+    const endDate = document.getElementById('end-date').value.trim();
+    const category = document.getElementById('report-category').value.trim(); // Get updated category ID
 
-      const url = `http://localhost:5000/api/reports?period=${encodeURIComponent(period)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&category=${encodeURIComponent(category)}`;
+    // Debug: Log input values for troubleshooting
+    console.log('Period:', period);
+    console.log('Start Date:', startDate);
+    console.log('End Date:', endDate);
+    console.log('Category:', category);
 
-      console.log('Request URL:', url); // Debug: Check the request URL
+    // Construct the API URL
+    let url = `http://localhost:5000/api/reports?period=${encodeURIComponent(period)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
 
-      try {
-          const response = await fetch(url);
-          if (response.ok) {
-              const report = await response.json();
-              displayReports(report);
-          } else {
-              alert('Failed to generate report. Status: ' + response.status);
-          }
-      } catch (error) {
-          console.error('Error generating report:', error);
+    // Only append category if it's provided
+    if (category) {
+      url += `&category=${encodeURIComponent(category)}`;
+    }
+
+    // Debug: Log the constructed request URL
+    console.log('Request URL:', url);
+
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const report = await response.json();
+        displayReports(report);
+      } else {
+        alert('Failed to generate report. Status: ' + response.status);
       }
+    } catch (error) {
+      console.error('Error generating report:', error);
+    }
   });
 });
 
+// Function to display reports in the specified format
 function displayReports(report) {
   const reportOutput = document.getElementById('report-output');
   reportOutput.innerHTML = `
-      <h3 style="color: #7c5fb8;">Daily Report</h3>
-      ${generateReportTable(report.daily)}
+    <h3 style="color: #7c5fb8;">Daily Report</h3>
+    ${generateReportTable(report.daily)}
 
-      <h3 style="color: #7c5fb8;">Weekly Report</h3>
-      ${generateReportTable(report.weekly)}
+    <h3 style="color: #7c5fb8;">Weekly Report</h3>
+    ${generateReportTable(report.weekly)}
 
-      <h3 style="color: #7c5fb8;">Monthly Report</h3>
-      ${generateReportTable(report.monthly)}
+    <h3 style="color: #7c5fb8;">Monthly Report</h3>
+    ${generateReportTable(report.monthly)}
 
-      <h3 style="color: #7c5fb8;">Yearly Report</h3>
-      ${generateReportTable(report.yearly)}
+    <h3 style="color: #7c5fb8;">Yearly Report</h3>
+    ${generateReportTable(report.yearly)}
   `;
 }
 
+// Function to generate a report table based on the data
 function generateReportTable(data) {
+  if (!data || Object.keys(data).length === 0) {
+    return '<p>No data available for this period.</p>'; // Display message if no data
+  }
+
   return `
-      <table>
-          <thead>
-              <tr>
-                  <th>Date/Period</th>
-                  <th>Category</th>
-                  <th>Amount</th>
-                  <th>Total</th>
-              </tr>
-          </thead>
-          <tbody>
-              ${Object.entries(data).map(([key, entry]) => `
-                  <tr>
-                      <td>${key}</td>
-                      <td>${entry.details.map(d => d.category).join(', ')}</td>
-                      <td>${entry.details.map(d => `$${d.amount.toFixed(2)}`).join(', ')}</td>
-                      <td>shs ${entry.total.toFixed(2)}</td>
-                  </tr>
-              `).join('')}
-          </tbody>
-      </table>
+    <table>
+      <thead>
+        <tr>
+          <th>Date/Period</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${Object.entries(data).map(([key, entry]) => `
+          <tr>
+            <td>${key}</td>
+            <td>${entry.details.map(d => d.category).join(', ')}</td>
+            <td>${entry.details.map(d => `$${d.amount.toFixed(2)}`).join(', ')}</td>
+            <td>$${entry.total.toFixed(2)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
   `;
 }
 
