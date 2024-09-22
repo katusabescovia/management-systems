@@ -302,13 +302,13 @@ function generateReportTable(data) {
           <tr>
             <td>${key}</td>
             <td>${entry.details.map(d => d.category).join(', ')}</td>
-            <td>${entry.details.map(d => `$${d.amount.toFixed(2)}`).join(', ')}</td>
-            <td>$${entry.total.toFixed(2)}</td>
+            <td>${entry.details.map(d => `shs ${d.amount.toFixed(2)}`).join(', ')}</td>
+            <td>shs ${entry.total.toFixed(2)}</td>
           </tr>
         `).join('')}
       </tbody>
     </table>
-  `;
+  `; 
 }
 
 
