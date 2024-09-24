@@ -35,13 +35,13 @@ app.use('/api/shoppinglists', shoppingListRoutes);
 app.use('/api/reports', reportRoutes);
 
 // Serve HTML files
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
-});
+// app.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+// });
 
-app.get('/landing', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'landing.html'));
-});
+// app.get('/landing', (req, res) => {
+//   res.sendFile(path.join(__dirname, '..', 'frontend', 'landing.html'));
+// });
 
 // Fallback route for undefined paths
 app.use((req, res) => {

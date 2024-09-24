@@ -16,16 +16,12 @@
       "dest": "/backend/server.js"
     },
     {
-      "src": "/",
-      "dest": "/Frontend/landing.html"
-    },
-    {
-      "src": "/dashboard",
+      
       "dest": "/Frontend/index.html"
     },
     {
-      "src": "/(.*)",
-      "dest": "/Frontend/$1"
+      
+      "dest": "/Frontend/landing.html"
     }
   ]
 }
