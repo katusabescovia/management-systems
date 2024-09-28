@@ -6,18 +6,24 @@ document.getElementById('expense-form').addEventListener('submit', async (e) => 
   const date = new Date(document.getElementById('expense-date').value).toISOString();
   const notes = document.getElementById('expense-notes').value;
 
-  const response = await fetch('http://localhost:5000/api/expenses', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ category, amount, date, notes })
-  });
+  try {
+    const response = await fetch('/api/expenses', { // Updated URL
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, amount, date, notes })
+    });
 
-  if (response.ok) {
-    alert('Expense added successfully!');
-    loadDashboard();
-    loadExpenses();
-  } else {
-    alert('Failed to add expense.');
+    if (response.ok) {
+      alert('Expense added successfully!');
+      loadDashboard();
+      loadExpenses();
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to add expense: ${errorData.message || response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error adding expense:', error);
+    alert('An unexpected error occurred while adding the expense.');
   }
 });
 
@@ -29,18 +35,24 @@ document.getElementById('income-form').addEventListener('submit', async (e) => {
   const date = new Date(document.getElementById('income-date').value).toISOString();
   const notes = document.getElementById('income-notes').value;
 
-  const response = await fetch('http://localhost:5000/api/incomes', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ source, amount, date, notes })
-  });
+  try {
+    const response = await fetch('/api/incomes', { // Updated URL
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ source, amount, date, notes })
+    });
 
-  if (response.ok) {
-    alert('Income added successfully!');
-    loadDashboard();
-    loadIncomes();
-  } else {
-    alert('Failed to add income.');
+    if (response.ok) {
+      alert('Income added successfully!');
+      loadDashboard();
+      loadIncomes();
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to add income: ${errorData.message || response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error adding income:', error);
+    alert('An unexpected error occurred while adding the income.');
   }
 });
 
@@ -53,18 +65,24 @@ document.getElementById('update-form').addEventListener('submit', async (e) => {
   const date = new Date(document.getElementById('update-date').value).toISOString();
   const notes = document.getElementById('update-notes').value;
 
-  const response = await fetch(`http://localhost:5000/api/expenses/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ category, amount, date, notes })
-  });
+  try {
+    const response = await fetch(`/api/expenses/${id}`, { // Updated URL
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, amount, date, notes })
+    });
 
-  if (response.ok) {
-    alert('Expense updated successfully!');
-    loadExpenses();
-    loadDashboard();
-  } else {
-    alert('Failed to update expense.');
+    if (response.ok) {
+      alert('Expense updated successfully!');
+      loadExpenses();
+      loadDashboard();
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to update expense: ${errorData.message || response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error updating expense:', error);
+    alert('An unexpected error occurred while updating the expense.');
   }
 });
 
@@ -77,29 +95,43 @@ document.getElementById('update-income-form').addEventListener('submit', async (
   const date = new Date(document.getElementById('update-income-date').value).toISOString();
   const notes = document.getElementById('update-income-notes').value;
 
-  const response = await fetch(`http://localhost:5000/api/incomes/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ source, amount, date, notes })
-  });
+  try {
+    const response = await fetch(`/api/incomes/${id}`, { // Updated URL
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ source, amount, date, notes })
+    });
 
-  if (response.ok) {
-    alert('Income updated successfully!');
-    loadIncomes();
-    loadDashboard();
-  } else {
-    alert('Failed to update income.');
+    if (response.ok) {
+      alert('Income updated successfully!');
+      loadIncomes();
+      loadDashboard();
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to update income: ${errorData.message || response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error updating income:', error);
+    alert('An unexpected error occurred while updating the income.');
   }
 });
 
 // Load the dashboard data
 async function loadDashboard() {
   try {
-    const expensesResponse = await fetch('http://localhost:5000/api/expenses');
-    const incomesResponse = await fetch('http://localhost:5000/api/incomes');
+    const [expensesResponse, incomesResponse] = await Promise.all([
+      fetch('/api/expenses'), // Updated URL
+      fetch('/api/incomes')    // Updated URL
+    ]);
 
-    const expenses = await expensesResponse.json();
-    const incomes = await incomesResponse.json();
+    if (!expensesResponse.ok || !incomesResponse.ok) {
+      throw new Error('Failed to load dashboard data.');
+    }
+
+    const [expenses, incomes] = await Promise.all([
+      expensesResponse.json(),
+      incomesResponse.json()
+    ]);
 
     const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
     const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
@@ -110,15 +142,17 @@ async function loadDashboard() {
     document.getElementById('balance').textContent = `Balance: shs ${balance.toFixed(2)}`;
   } catch (error) {
     console.error('Error loading dashboard:', error);
+    alert('An error occurred while loading the dashboard.');
   }
 }
 
 // Load the expenses data
 async function loadExpenses() {
   try {
-    const response = await fetch('http://localhost:5000/api/expenses');
-    const expenses = await response.json();
+    const response = await fetch('/api/expenses'); // Updated URL
+    if (!response.ok) throw new Error(`Failed to fetch expenses: ${response.statusText}`);
 
+    const expenses = await response.json();
     const tbody = document.querySelector('#expenses-table tbody');
     tbody.innerHTML = '';
 
@@ -138,15 +172,17 @@ async function loadExpenses() {
     });
   } catch (error) {
     console.error('Error loading expenses:', error);
+    alert('An error occurred while loading expenses.');
   }
 }
 
 // Load the incomes data
 async function loadIncomes() {
   try {
-    const response = await fetch('http://localhost:5000/api/incomes');
-    const incomes = await response.json();
+    const response = await fetch('/api/incomes'); // Updated URL
+    if (!response.ok) throw new Error(`Failed to fetch incomes: ${response.statusText}`);
 
+    const incomes = await response.json();
     const tbody = document.querySelector('#income-table tbody');
     tbody.innerHTML = '';
 
@@ -166,6 +202,7 @@ async function loadIncomes() {
     });
   } catch (error) {
     console.error('Error loading incomes:', error);
+    alert('An error occurred while loading incomes.');
   }
 }
 
@@ -193,13 +230,19 @@ function editIncome(id, source, amount, date, notes) {
 async function deleteExpense(id) {
   if (!confirm('Are you sure you want to delete this expense?')) return;
 
-  const response = await fetch(`http://localhost:5000/api/expenses/${id}`, { method: 'DELETE' });
-  if (response.ok) {
-    alert('Expense deleted successfully!');
-    loadExpenses();
-    loadDashboard();
-  } else {
-    alert('Failed to delete expense.');
+  try {
+    const response = await fetch(`/api/expenses/${id}`, { method: 'DELETE' }); // Updated URL
+    if (response.ok) {
+      alert('Expense deleted successfully!');
+      loadExpenses();
+      loadDashboard();
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to delete expense: ${errorData.message || response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error deleting expense:', error);
+    alert('An unexpected error occurred while deleting the expense.');
   }
 }
 
@@ -207,21 +250,23 @@ async function deleteExpense(id) {
 async function deleteIncome(id) {
   if (!confirm('Are you sure you want to delete this income?')) return;
 
-  const response = await fetch(`http://localhost:5000/api/incomes/${id}`, { method: 'DELETE' });
-  if (response.ok) {
-    alert('Income deleted successfully!');
-    loadIncomes();
-    loadDashboard();
-  } else {
-    alert('Failed to delete income.');
+  try {
+    const response = await fetch(`/api/incomes/${id}`, { method: 'DELETE' }); // Updated URL
+    if (response.ok) {
+      alert('Income deleted successfully!');
+      loadIncomes();
+      loadDashboard();
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to delete income: ${errorData.message || response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error deleting income:', error);
+    alert('An unexpected error occurred while deleting the income.');
   }
 }
 
-
 // Generate and display reports
-// Generate and display reports
-// Add event listeners to all report buttons
-// Attach event listeners to report buttons
 document.querySelectorAll('#report-section button').forEach(button => {
   button.addEventListener('click', async (e) => {
     e.preventDefault(); // Prevent default form behavior
@@ -239,7 +284,7 @@ document.querySelectorAll('#report-section button').forEach(button => {
     console.log('Category:', category);
 
     // Construct the API URL
-    let url = `http://localhost:5000/api/reports?period=${encodeURIComponent(period)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+    let url = `/api/reports?period=${encodeURIComponent(period)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
 
     // Only append category if it's provided
     if (category) {
@@ -255,10 +300,12 @@ document.querySelectorAll('#report-section button').forEach(button => {
         const report = await response.json();
         displayReports(report);
       } else {
-        alert('Failed to generate report. Status: ' + response.status);
+        const errorData = await response.json();
+        alert(`Failed to generate report: ${errorData.message || response.statusText}`);
       }
     } catch (error) {
       console.error('Error generating report:', error);
+      alert('An unexpected error occurred while generating the report.');
     }
   });
 });
@@ -311,11 +358,7 @@ function generateReportTable(data) {
   `; 
 }
 
-
-// main.js
-// main.js
-// main.js
-// main.js
+// Initialize Shopping Lists and Report Functionality
 document.addEventListener('DOMContentLoaded', () => {
   displayShoppingLists();
   document.getElementById('shopping-list-form').addEventListener('submit', handleFormSubmit);
@@ -323,6 +366,31 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-edit-item-button').addEventListener('click', addEditItem);
   document.getElementById('cancel-edit-button').addEventListener('click', cancelEdit);
   document.getElementById('edit-form').addEventListener('submit', saveEdit); 
+
+  const heading = document.getElementById('dashboard-heading');
+  const newHeadingInput = document.getElementById('new-heading');
+  const changeHeadingButton = document.getElementById('change-heading-button');
+
+  // Add event listener to the button to change the heading dynamically
+  changeHeadingButton.addEventListener('click', () => {
+    const newHeading = newHeadingInput.value;
+
+    if (newHeading.trim() !== "") {
+      heading.textContent = newHeading;
+    } else {
+      alert("Please enter a new heading.");
+    }
+  });
+
+  // Add event listener to the input to change the heading color when focused
+  newHeadingInput.addEventListener('focus', () => {
+    heading.classList.add('purple-heading');
+  });
+
+  // Remove the purple-heading class when the input loses focus
+  newHeadingInput.addEventListener('blur', () => {
+    heading.classList.remove('purple-heading');
+  });
 });
 
 let editingListId = null;
@@ -372,79 +440,75 @@ function removeItem(button) {
 
 async function displayShoppingLists() {
   try {
-      const response = await fetch('http://127.0.0.1:5000/api/shoppinglists');
-      if (!response.ok) throw new Error(`Failed to fetch shopping lists: ${response.statusText}`);
+    const response = await fetch('/api/shoppinglists'); // Updated URL
+    if (!response.ok) throw new Error(`Failed to fetch shopping lists: ${response.statusText}`);
 
-      const shoppingLists = await response.json();
-      const container = document.getElementById('shopping-lists');
-      container.innerHTML = '';
+    const shoppingLists = await response.json();
+    const container = document.getElementById('shopping-lists');
+    container.innerHTML = '';
 
-      shoppingLists.forEach(list => {
-          const listCard = document.createElement('div');
-          listCard.classList.add('card');
-          listCard.innerHTML = `<h2>${list.name}</h2>`;
-          listCard.addEventListener('click', () => showShoppingListDetails(list._id));  // Display full details on click
-          container.appendChild(listCard);
-      });
+    shoppingLists.forEach(list => {
+      const listCard = document.createElement('div');
+      listCard.classList.add('card');
+      listCard.innerHTML = `<h2>${list.name}</h2>`;
+      listCard.addEventListener('click', () => showShoppingListDetails(list._id));  // Display full details on click
+      container.appendChild(listCard);
+    });
   } catch (error) {
-      console.error('An error occurred while fetching shopping lists:', error.message);
-      alert(`Error: ${error.message}`);
+    console.error('An error occurred while fetching shopping lists:', error.message);
+    alert(`Error: ${error.message}`);
   }
 }
 
 async function showShoppingListDetails(listId) {
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
-      if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
+    const response = await fetch(`/api/shoppinglists/${listId}`); // Updated URL
+    if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
 
-      const list = await response.json();
-      const container = document.getElementById('shopping-lists');
-      container.innerHTML = '';
+    const list = await response.json();
+    const container = document.getElementById('shopping-lists');
+    container.innerHTML = '';
 
-      const listTable = document.createElement('table');
-      listTable.classList.add('shopping-list-table');
-      listTable.innerHTML = `
-          <thead>
-              <tr>
-                  <th>Item Number</th>
-                  <th>Item Name</th>
-                  <th>Quantity</th>
-                  <th>Unit Price</th>
-                  <th>Total Cost</th>
-              </tr>
-          </thead>
-          <tbody>
-              ${list.items.map(item => `
-                  <tr>
-                      <td>${item.itemNumber}</td>
-                      <td>${item.itemName}</td>
-                      <td>${item.quantity}</td>
-                      <td>${item.unitPrice.toFixed(2)}</td>
-                      <td>${item.totalCost.toFixed(2)}</td>
-                  </tr>
-              `).join('')}
-          </tbody>
-          <tfoot>
-              <tr>
-                  <td colspan="4"><strong>Overall Total:</strong></td>
-                  <td>${list.overallTotal.toFixed(2)}</td>
-              </tr>
-          </tfoot>
-      `;
+    const listTable = document.createElement('table');
+    listTable.classList.add('shopping-list-table');
+    listTable.innerHTML = `
+        <thead>
+            <tr>
+                <th>Item Number</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${list.items.map(item => `
+                <tr>
+                    <td>${item.itemNumber}</td>
+                    <td>${item.itemName}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.unitPrice.toFixed(2)}</td>
+                    <td>${item.totalCost.toFixed(2)}</td>
+                </tr>
+            `).join('')}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4"><strong>Overall Total:</strong></td>
+                <td>${list.overallTotal.toFixed(2)}</td>
+            </tr>
+        </tfoot>
+    `;
 
-      const listCard = document.createElement('div');
-      listCard.classList.add('card');
-      listCard.innerHTML = `<h2>${list.name}</h2>`;
-      listCard.appendChild(listTable);
-      listCard.innerHTML += `
-          <button onclick="editShoppingList('${list._id}')">Edit</button>
-          <button onclick="deleteShoppingList('${list._id}')">Delete</button>
-      `;
-      container.appendChild(listCard);
-  } catch (error) {
-      console.error('An error occurred while fetching shopping list details:', error.message);
-      alert(`Error: ${error.message}`);
-  }
+    const listCard = document.createElement('div');
+    listCard.classList.add('card');
+    listCard.innerHTML = `<h2>${list.name}</h2>`;
+    listCard.appendChild(listTable);
+    listCard.innerHTML += `
+        <button onclick="editShoppingList('${list._id}')">Edit</button>
+        <button onclick="deleteShoppingList('${list._id}')">Delete</button>
+    `;
+    container.appendChild(listCard);
 }
 
 async function handleFormSubmit(event) {
@@ -452,42 +516,42 @@ async function handleFormSubmit(event) {
 
   const name = document.getElementById('list-name').value;
   const items = Array.from(document.querySelectorAll('#items-container .item')).map(item => ({
-      itemNumber: item.querySelector('.item-number').value,
-      itemName: item.querySelector('.item-name').value,
-      quantity: parseInt(item.querySelector('.quantity').value, 10),
-      unitPrice: parseFloat(item.querySelector('.unit-price').value),
-      totalCost: parseFloat(item.querySelector('.total-cost').value),
+    itemNumber: item.querySelector('.item-number').value,
+    itemName: item.querySelector('.item-name').value,
+    quantity: parseInt(item.querySelector('.quantity').value, 10),
+    unitPrice: parseFloat(item.querySelector('.unit-price').value),
+    totalCost: parseFloat(item.querySelector('.total-cost').value),
   }));
   const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
 
   try {
-      const response = await fetch('http://127.0.0.1:5000/api/shoppinglists', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, items, overallTotal }),
-      });
+    const response = await fetch('/api/shoppinglists', { // Updated URL
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, items, overallTotal }),
+    });
 
-      if (!response.ok) throw new Error(`Failed to save shopping list: ${response.statusText}`);
+    if (!response.ok) throw new Error(`Failed to save shopping list: ${response.statusText}`);
 
-      await displayShoppingLists();
-      event.target.reset();
+    await displayShoppingLists();
+    event.target.reset();
   } catch (error) {
-      console.error('An error occurred while saving the shopping list:', error.message);
-      alert(`Error: ${error.message}`);
+    console.error('An error occurred while saving the shopping list:', error.message);
+    alert(`Error: ${error.message}`);
   }
 }
 
 async function editShoppingList(listId) {
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
-      if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
+    const response = await fetch(`/api/shoppinglists/${listId}`); // Updated URL
+    if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
 
-      const list = await response.json();
-      editingListId = listId;
-      showEditForm(list);
+    const list = await response.json();
+    editingListId = listId;
+    showEditForm(list);
   } catch (error) {
-      console.error('An error occurred while fetching the shopping list:', error.message);
-      alert(`Error: ${error.message}`);
+    console.error('An error occurred while fetching the shopping list:', error.message);
+    alert(`Error: ${error.message}`);
   }
 }
 
@@ -500,18 +564,18 @@ function showEditForm(list) {
   editItemsContainer.innerHTML = '';
 
   list.items.forEach(item => {
-      const itemDiv = document.createElement('div');
-      itemDiv.classList.add('item');
-      itemDiv.innerHTML = `
-          <input type="number" class="item-number" placeholder="Item Number" value="${item.itemNumber}" required>
-          <input type="text" class="item-name" placeholder="Item Name" value="${item.itemName}" required>
-          <input type="number" class="quantity" placeholder="Quantity" value="${item.quantity}" required>
-          <input type="number" class="unit-price" placeholder="Unit Price" value="${item.unitPrice}" required>
-          <input type="number" class="total-cost" placeholder="Total Cost" value="${item.totalCost}" readonly>
-          <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
-          <button type="button" onclick="removeItem(this)">Remove Item</button>
-      `;
-      editItemsContainer.appendChild(itemDiv);
+    const itemDiv = document.createElement('div');
+    itemDiv.classList.add('item');
+    itemDiv.innerHTML = `
+        <input type="number" class="item-number" placeholder="Item Number" value="${item.itemNumber}" required>
+        <input type="text" class="item-name" placeholder="Item Name" value="${item.itemName}" required>
+        <input type="number" class="quantity" placeholder="Quantity" value="${item.quantity}" required>
+        <input type="number" class="unit-price" placeholder="Unit Price" value="${item.unitPrice}" required>
+        <input type="number" class="total-cost" placeholder="Total Cost" value="${item.totalCost}" readonly>
+        <button type="button" onclick="calculateTotal(this)">Calculate Total</button>
+        <button type="button" onclick="removeItem(this)">Remove Item</button>
+    `;
+    editItemsContainer.appendChild(itemDiv);
   });
 }
 
@@ -520,31 +584,31 @@ async function saveEdit(event) {
 
   const name = document.getElementById('edit-list-name').value;
   const items = Array.from(document.querySelectorAll('#edit-items-container .item')).map(item => ({
-      itemNumber: item.querySelector('.item-number').value,
-      itemName: item.querySelector('.item-name').value,
-      quantity: parseInt(item.querySelector('.quantity').value, 10),
-      unitPrice: parseFloat(item.querySelector('.unit-price').value),
-      totalCost: parseFloat(item.querySelector('.total-cost').value),
+    itemNumber: item.querySelector('.item-number').value,
+    itemName: item.querySelector('.item-name').value,
+    quantity: parseInt(item.querySelector('.quantity').value, 10),
+    unitPrice: parseFloat(item.querySelector('.unit-price').value),
+    totalCost: parseFloat(item.querySelector('.total-cost').value),
   }));
   const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
 
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${editingListId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, items, overallTotal }),
-      });
+    const response = await fetch(`/api/shoppinglists/${editingListId}`, { // Updated URL
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, items, overallTotal }),
+    });
 
-      if (!response.ok) throw new Error(`Failed to update shopping list: ${response.statusText}`);
+    if (!response.ok) throw new Error(`Failed to update shopping list: ${response.statusText}`);
 
-      editingListId = null;
-      document.getElementById('edit-form').reset();
-      document.getElementById('edit-shopping-list-container').style.display = 'none';
-      document.getElementById('shopping-list-form-container').style.display = 'block';
-      await displayShoppingLists();
+    editingListId = null;
+    document.getElementById('edit-form').reset();
+    document.getElementById('edit-shopping-list-container').style.display = 'none';
+    document.getElementById('shopping-list-form-container').style.display = 'block';
+    await displayShoppingLists();
   } catch (error) {
-      console.error('An error occurred while updating the shopping list:', error.message);
-      alert(`Error: ${error.message}`);
+    console.error('An error occurred while updating the shopping list:', error.message);
+    alert(`Error: ${error.message}`);
   }
 }
 
@@ -557,50 +621,24 @@ function cancelEdit() {
 
 async function deleteShoppingList(listId) {
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`, { method: 'DELETE' });
-      if (!response.ok) throw new Error(`Failed to delete shopping list: ${response.statusText}`);
+    const response = await fetch(`/api/shoppinglists/${listId}`, { method: 'DELETE' }); // Updated URL
+    if (!response.ok) throw new Error(`Failed to delete shopping list: ${response.statusText}`);
 
-      await displayShoppingLists();
+    await displayShoppingLists();
+    loadDashboard();
   } catch (error) {
-      console.error('An error occurred while deleting the shopping list:', error.message);
-      alert(`Error: ${error.message}`);
+    console.error('An error occurred while deleting the shopping list:', error.message);
+    alert(`Error: ${error.message}`);
   }
 }
 
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-  const heading = document.getElementById('dashboard-heading');
-  const newHeadingInput = document.getElementById('new-heading');
-  const changeHeadingButton = document.getElementById('change-heading-button');
-
-  // Add event listener to the button to change the heading dynamically
-  changeHeadingButton.addEventListener('click', () => {
-    const newHeading = newHeadingInput.value;
-
-    if (newHeading.trim() !== "") {
-      heading.textContent = newHeading;
-    } else {
-      alert("Please enter a new heading.");
-    }
-  });
-
-  // Add event listener to the input to change the heading color when focused
-  newHeadingInput.addEventListener('focus', () => {
-    heading.classList.add('purple-heading');
-  });
-
-  // Remove the purple-heading class when the input loses focus
-  newHeadingInput.addEventListener('blur', () => {
-    heading.classList.remove('purple-heading');
-  });
+  // Existing event listeners and initialization code
+  // (Already included above in the first DOMContentLoaded listener)
 });
-
 
 // Initial load
 loadDashboard();
 loadExpenses();
 loadIncomes();
-
-
-
-

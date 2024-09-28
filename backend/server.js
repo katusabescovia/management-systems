@@ -1,25 +1,24 @@
-// Load environment variables from .env file
-// require('dotenv').config();
+// backend/server.js
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path');
+const serverless = require('serverless-http');
 
+// Initialize Express app
 const app = express();
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
-app.use(cors()); // Enable CORS for cross-origin requests
+app.use(cors()); // Enable CORS
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
+// Connect to MongoDB using environment variable
+const mongoURI = process.env.MONGO_URI;
+if (!mongoURI) {
+  console.error('Error: MONGO_URI environment variable is not set.');
+  // Optionally, you can exit the process or handle it as needed
+}
 
-// Debugging: Log Environment Variables
-console.log('Environment Variables:', process.env);
-console.log('MONGO_URI:', process.env.MONGO_URI);
-
-// Connect to MongoDB
 mongoose.connect('mongodb+srv://scovia:jaxville@scovia.uqcyz.mongodb.net/?retryWrites=true&w=majority&appName=SCOVIA', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -43,22 +42,10 @@ app.use('/api/incomes', incomeRoutes);
 app.use('/api/shoppinglists', shoppingListRoutes);
 app.use('/api/reports', reportRoutes);
 
-// Serve HTML files
-app.get('/index.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
-});
-
-app.get('/landing', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'landing.html'));
-});
-
 // Fallback route for undefined paths
 app.use((req, res) => {
-  res.status(404).send('Page Not Found');
+  res.status(404).json({ message: 'Page Not Found' });
 });
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Export the Express app wrapped with serverless-http
+module.exports.handler = serverless(app);
