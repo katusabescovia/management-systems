@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // Serve static files from the frontend directory
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.use(express.static(path.join(__dirname, '..', 'Frontend')));
 
 // Connect to MongoDB
 const mongoURI = 'mongodb+srv://scovia:jaxville@scovia.uqcyz.mongodb.net/test?retryWrites=true&w=majority&appName=SCOVIA';
@@ -41,14 +41,14 @@ app.use('/api/reports', reportRoutes);
 
 // Serve HTML files
 app.get('/', (req, res) => {
-  const indexPath = path.join(__dirname, '..', 'frontend', 'index.html');
+  const indexPath = path.join(__dirname, '..', 'Frontend', 'index.html');
   console.log('Serving index.html from:', indexPath);
   res.sendFile(indexPath);
 });
 
 // Ensure that landing.html is accessible
 app.get('/landing', (req, res) => {
-  const landingPath = path.join(__dirname, '..', 'frontend', 'landing.html');
+  const landingPath = path.join(__dirname, '..', 'Frontend', 'landing.html');
   console.log('Serving landing.html from:', landingPath);
   res.sendFile(landingPath);
 });
