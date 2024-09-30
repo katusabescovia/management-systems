@@ -1,6 +1,4 @@
-// Load environment variables from .env file
 
-// require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -17,8 +15,6 @@ app.use(cors()); // Enable CORS for cross-origin requests
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 // Debugging: Log Environment Variables
-console.log('Environment Variables:', process.env);
-console.log('MONGO_URI:', process.env.MONGO_URI);
 
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://scovia:jaxville@scovia.uqcyz.mongodb.net/?retryWrites=true&w=majority&appName=SCOVIA', {
