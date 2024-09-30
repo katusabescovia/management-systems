@@ -1,25 +1,59 @@
 // Handle form submissions for adding expenses
+// Determine the base URL based on the environment
+const isProduction = window.location.hostname === 'management-systems.onrender.com';
+
+// Set the base URL based on the environment
+const BASE_URL = isProduction 
+    ? `${process.env.REACT_APP_BACKEND_URL_RENDER}/`  // Ensure there's a trailing slash
+    : `${process.env.REACT_APP_BACKEND_URL}/`;   
+// Handle form submissions for adding expenses
 document.getElementById('expense-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const category = document.getElementById('category').value;
-  const amount = parseFloat(document.getElementById('expense-amount').value);
-  const date = new Date(document.getElementById('expense-date').value).toISOString();
-  const notes = document.getElementById('expense-notes').value;
+    e.preventDefault();
+    const category = document.getElementById('category').value;
+    const amount = parseFloat(document.getElementById('expense-amount').value);
+    const date = new Date(document.getElementById('expense-date').value).toISOString();
+    const notes = document.getElementById('expense-notes').value;
 
-  const response = await fetch('http://localhost:5000/api/expenses', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ category, amount, date, notes })
-  });
+    const response = await fetch(`${BASE_URL}expenses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, amount, date, notes })
+    });
 
-  if (response.ok) {
-    alert('Expense added successfully!');
-    loadDashboard();
-    loadExpenses();
-  } else {
-    alert('Failed to add expense.');
-  }
+    if (response.ok) {
+        alert('Expense added successfully!');
+        loadDashboard();
+        loadExpenses();
+    } else {
+        alert('Failed to add expense.');
+    }
 });
+
+// Handle form submissions for adding incomes
+document.getElementById('income-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const source = document.getElementById('income-source').value;
+    const amount = parseFloat(document.getElementById('income-amount').value);
+    const date = new Date(document.getElementById('income-date').value).toISOString();
+    const notes = document.getElementById('income-notes').value;
+
+    const response = await fetch(`${BASE_URL}incomes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source, amount, date, notes })
+    });
+
+    if (response.ok) {
+        alert('Income added successfully!');
+        loadDashboard();
+        loadIncomes();
+    } else {
+        alert('Failed to add income.');
+    }
+});
+
+// Handle expense updates here...
+
 
 // Handle form submissions for adding incomes
 document.getElementById('income-form').addEventListener('submit', async (e) => {
@@ -29,7 +63,7 @@ document.getElementById('income-form').addEventListener('submit', async (e) => {
   const date = new Date(document.getElementById('income-date').value).toISOString();
   const notes = document.getElementById('income-notes').value;
 
-  const response = await fetch('http://localhost:5000/api/incomes', {
+  const response = await fetch(`${BASE_URL}incomes`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source, amount, date, notes })
@@ -53,7 +87,7 @@ document.getElementById('update-form').addEventListener('submit', async (e) => {
   const date = new Date(document.getElementById('update-date').value).toISOString();
   const notes = document.getElementById('update-notes').value;
 
-  const response = await fetch(`http://localhost:5000/api/expenses/${id}`, {
+  const response = await fetch(`${BASE_URL}expenses/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ category, amount, date, notes })
@@ -77,7 +111,7 @@ document.getElementById('update-income-form').addEventListener('submit', async (
   const date = new Date(document.getElementById('update-income-date').value).toISOString();
   const notes = document.getElementById('update-income-notes').value;
 
-  const response = await fetch(`http://localhost:5000/api/incomes/${id}`, {
+  const response = await fetch(`${BASE_URL}incomes/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ source, amount, date, notes })
@@ -95,8 +129,8 @@ document.getElementById('update-income-form').addEventListener('submit', async (
 // Load the dashboard data
 async function loadDashboard() {
   try {
-    const expensesResponse = await fetch('http://localhost:5000/api/expenses');
-    const incomesResponse = await fetch('http://localhost:5000/api/incomes');
+    const expensesResponse = await fetch(`${BASE_URL}expenses`);
+    const incomesResponse = await fetch(`${BASE_URL}incomes`);
 
     const expenses = await expensesResponse.json();
     const incomes = await incomesResponse.json();
@@ -116,7 +150,7 @@ async function loadDashboard() {
 // Load the expenses data
 async function loadExpenses() {
   try {
-    const response = await fetch('http://localhost:5000/api/expenses');
+    const response = await fetch(`${BASE_URL}expenses`);
     const expenses = await response.json();
 
     const tbody = document.querySelector('#expenses-table tbody');
@@ -144,7 +178,7 @@ async function loadExpenses() {
 // Load the incomes data
 async function loadIncomes() {
   try {
-    const response = await fetch('http://localhost:5000/api/incomes');
+    const response = await fetch(`${BASE_URL}incomes`)
     const incomes = await response.json();
 
     const tbody = document.querySelector('#income-table tbody');
@@ -193,7 +227,7 @@ function editIncome(id, source, amount, date, notes) {
 async function deleteExpense(id) {
   if (!confirm('Are you sure you want to delete this expense?')) return;
 
-  const response = await fetch(`http://localhost:5000/api/expenses/${id}`, { method: 'DELETE' });
+  const response = await fetch(`${BASE_URL}expenses/${id}`, { method: 'DELETE' });
   if (response.ok) {
     alert('Expense deleted successfully!');
     loadExpenses();
@@ -207,7 +241,7 @@ async function deleteExpense(id) {
 async function deleteIncome(id) {
   if (!confirm('Are you sure you want to delete this income?')) return;
 
-  const response = await fetch(`http://localhost:5000/api/incomes/${id}`, { method: 'DELETE' });
+  const response = await fetch(`${BASE_URL}incomes/${id}`, { method: 'DELETE' });
   if (response.ok) {
     alert('Income deleted successfully!');
     loadIncomes();
@@ -239,7 +273,7 @@ document.querySelectorAll('#report-section button').forEach(button => {
     console.log('Category:', category);
 
     // Construct the API URL
-    let url = `http://localhost:5000/api/reports?period=${encodeURIComponent(period)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+    let url = `${BASE_URL}reports?period=${encodeURIComponent(period)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
 
     // Only append category if it's provided
     if (category) {
@@ -372,7 +406,7 @@ function removeItem(button) {
 
 async function displayShoppingLists() {
   try {
-      const response = await fetch('http://127.0.0.1:5000/api/shoppinglists');
+      const response = await fetch(`${BASE_URL}shoppinglists`);
       if (!response.ok) throw new Error(`Failed to fetch shopping lists: ${response.statusText}`);
 
       const shoppingLists = await response.json();
@@ -394,7 +428,7 @@ async function displayShoppingLists() {
 
 async function showShoppingListDetails(listId) {
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
+      const response = await fetch(`${BASE_URL}shoppinglists/${listId}`);
       if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
 
       const list = await response.json();
@@ -461,7 +495,7 @@ async function handleFormSubmit(event) {
   const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
 
   try {
-      const response = await fetch('http://127.0.0.1:5000/api/shoppinglists', {
+      const response = await fetch(`${BASE_URL}shoppinglists`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, items, overallTotal }),
@@ -479,7 +513,7 @@ async function handleFormSubmit(event) {
 
 async function editShoppingList(listId) {
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`);
+      const response = await fetch(`${BASE_URL}shoppinglists/${listId}`);
       if (!response.ok) throw new Error(`Failed to fetch shopping list: ${response.statusText}`);
 
       const list = await response.json();
@@ -529,7 +563,7 @@ async function saveEdit(event) {
   const overallTotal = items.reduce((sum, item) => sum + item.totalCost, 0);
 
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${editingListId}`, {
+      const response = await fetch(`${BASE_URL}shoppinglists/${editingListId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, items, overallTotal }),
@@ -557,7 +591,7 @@ function cancelEdit() {
 
 async function deleteShoppingList(listId) {
   try {
-      const response = await fetch(`http://127.0.0.1:5000/api/shoppinglists/${listId}`, { method: 'DELETE' });
+      const response = await fetch(`${BASE_URL}shoppinglists/${listId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error(`Failed to delete shopping list: ${response.statusText}`);
 
       await displayShoppingLists();
