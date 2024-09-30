@@ -16,8 +16,9 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 const mongoURI = 'mongodb+srv://scovia:jaxville@scovia.uqcyz.mongodb.net/test?retryWrites=true&w=majority&appName=SCOVIA';
 
 mongoose.connect(mongoURI, {
+  // The following options are deprecated but included for compatibility
   useNewUrlParser: true,
-  useUnifiedTopology: true // Note: This option is deprecated but included for compatibility
+  useUnifiedTopology: true
 })
 .then(() => {
   console.log('Connected to MongoDB');
@@ -58,7 +59,7 @@ app.use((req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // Use the PORT provided by Render or fallback to 5000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
