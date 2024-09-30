@@ -40,12 +40,16 @@ app.use('/api/reports', reportRoutes);
 
 // Serve HTML files
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+  const indexPath = path.join(__dirname, '..', 'frontend', 'index.html');
+  console.log('Serving index.html from:', indexPath);
+  res.sendFile(indexPath);
 });
 
 // Ensure that landing.html is accessible
 app.get('/landing', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'frontend', 'landing.html'));
+  const landingPath = path.join(__dirname, '..', 'frontend', 'landing.html');
+  console.log('Serving landing.html from:', landingPath);
+  res.sendFile(landingPath);
 });
 
 // Fallback route for undefined paths
