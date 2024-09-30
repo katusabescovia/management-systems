@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Serve static files
+// Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 // Connect to MongoDB
@@ -32,17 +32,18 @@ const incomeRoutes = require('./routes/income');
 const shoppingListRoutes = require('./routes/shoppingLists');
 const reportRoutes = require('./routes/reports');
 
-// Setting up routes
+// Setting up API routes
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/incomes', incomeRoutes);
 app.use('/api/shoppinglists', shoppingListRoutes);
 app.use('/api/reports', reportRoutes);
 
 // Serve HTML files
-app.get('/index.html', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
+// Ensure that landing.html is accessible
 app.get('/landing', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'landing.html'));
 });
