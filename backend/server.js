@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -8,18 +6,18 @@ const path = require('path');
 const app = express();
 
 // Middleware
-app.use(express.json()); // Parse JSON bodies
-app.use(cors()); // Enable CORS for cross-origin requests
+app.use(express.json());
+app.use(cors());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
-// Debugging: Log Environment Variables
-
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://scovia:jaxville@scovia.uqcyz.mongodb.net/?retryWrites=true&w=majority&appName=SCOVIA', {
+const mongoURI = 'mongodb+srv://scovia:jaxville@scovia.uqcyz.mongodb.net/test?retryWrites=true&w=majority&appName=SCOVIA';
+
+mongoose.connect(mongoURI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true // Note: This option is deprecated but included for compatibility
 })
 .then(() => {
   console.log('Connected to MongoDB');
@@ -28,7 +26,7 @@ mongoose.connect('mongodb+srv://scovia:jaxville@scovia.uqcyz.mongodb.net/?retryW
   console.error('MongoDB connection error:', err);
 });
 
-// Importing route files
+// Importing routes
 const expenseRoutes = require('./routes/expenses');
 const incomeRoutes = require('./routes/income');
 const shoppingListRoutes = require('./routes/shoppingLists');
