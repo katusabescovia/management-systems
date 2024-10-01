@@ -4,8 +4,8 @@ const isProduction = window.location.hostname === 'management-systems.onrender.c
 
 // Set the base URL based on the environment
 const BASE_URL = isProduction 
-    ? `${process.env.REACT_APP_BACKEND_URL_RENDER}/`  // Ensure there's a trailing slash
-    : `${process.env.REACT_APP_BACKEND_URL}/`;   
+    ? 'https://management-systems.onrender.com/api/'  // Production API URL
+    : 'http://localhost:5000/api/';   
 // Handle form submissions for adding expenses
 document.getElementById('expense-form').addEventListener('submit', async (e) => {
     e.preventDefault();
