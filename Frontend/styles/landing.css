@@ -13,16 +13,16 @@ body, html {
   overflow: hidden; }
 
 
-.landing-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: url('/Frontend/images/aa.webp') no-repeat center center/cover; /* Background image */
-  background-size: cover;
-  position: relative;
-}
-
+  .landing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('../images/aa.webp') no-repeat center center/cover; /* Corrected Path */
+    background-size: cover;
+    position: relative;
+  }
+  
 
 .overlay {
   position: absolute;
